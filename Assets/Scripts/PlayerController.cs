@@ -4,33 +4,32 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 public class PlayerController : MonoBehaviour
 {
-    private Transform modelTransform;
     private Rigidbody rb;
     private float movementX, movementY;
-    public float speedConst = 0;
     private Vector2 mousePosition;
+
+    public float speedConst = 0;
     public Camera mainCamera;
     public GameObject lookTarget;
     public GameObject playerModel;
     public GameObject gunEmitter;
     public GameObject bulletPrefab;
-    // Start is called before the first frame update
+
+
     void Start()
     {
         rb = GetComponent<Rigidbody>();
-        modelTransform = playerModel.GetComponent<Transform>();
-        //mainCamera = GetComponentInChildren<Camera>();
     }
     void FixedUpdate()
     {
         Vector3 movement = new Vector3(movementX, 0.0f, movementY);
         rb.AddForce(movement * speedConst);
     }
-    // Update is called once per frame
+
     void Update()
     {
-        Debug.Log(mousePosition);
-        RotationRayCast();
+        //Debug.Log(mousePosition);
+        //RotationRayCast();
         RotatePlayer();
     }
     void RotationRayCast()
@@ -41,7 +40,7 @@ public class PlayerController : MonoBehaviour
     void RotatePlayer()
     {
         lookTarget.transform.localPosition = new Vector3(mousePosition.normalized.x,0.0f,mousePosition.normalized.y);
-        modelTransform.LookAt(lookTarget.transform);
+        playerModel.transform.LookAt(lookTarget.transform);
     }
     void OnMove(InputValue movementValue)
     {
@@ -56,10 +55,15 @@ public class PlayerController : MonoBehaviour
     }
     void OnPrimaryFire()
     {
-        GameObject newBullet = Instantiate(bulletPrefab,gunEmitter.transform.position,modelTransform.rotation);
+        GameObject newBullet = Instantiate(bulletPrefab,gunEmitter.transform.position,playerModel.transform.rotation);
         BulletScript script = newBullet.GetComponent<BulletScript>();
         newBullet.name = "PlayerShot";
-        script.speed = 50;
+        script.impulse = .5f;
         script.lifetime = 2;
+    }
+    void OnSecondaryFire()
+    {
+        Ray hitscan = new Ray(gunEmitter.transform.position,  gunEmitter.transform.position-lookTarget.transform.position );
+        Debug.DrawRay(hitscan.origin, hitscan.direction * 1000,Color.red,0.5f);
     }
 }

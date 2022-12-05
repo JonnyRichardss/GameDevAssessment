@@ -4,22 +4,27 @@ using UnityEngine;
 
 public class BulletScript : MonoBehaviour
 {
-    public float speed = 500;
-    public float lifetime = 1;
+    public float impulse;
+    public float lifetime;
+    private Rigidbody rb;
     // Start is called before the first frame update
     void Start()
     {
-        
+        rb = GetComponent<Rigidbody>();
+        rb.AddForce(impulse*transform.forward,ForceMode.Impulse);
     }
 
     // Update is called once per frame
     void Update()
     {
-        transform.position += transform.forward *speed *Time.deltaTime;
         lifetime -= Time.deltaTime;
         if (lifetime <= 0)
         {
             Destroy(gameObject);
         }
+    }
+    private void OnCollisionEnter(Collision collision)
+    {
+        Destroy(gameObject);
     }
 }
