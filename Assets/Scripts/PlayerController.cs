@@ -6,7 +6,8 @@ public class PlayerController : MonoBehaviour
 {
     private Rigidbody rb;
     private float movementX, movementY;
-    private Vector2 mousePosition;
+    private float mouseX, mouseY;
+    private bool godMode = false;
 
     public float speedConst = 0;
     public Camera mainCamera;
@@ -23,24 +24,17 @@ public class PlayerController : MonoBehaviour
     void FixedUpdate()
     {
         Vector3 movement = new Vector3(movementX, 0.0f, movementY);
+        Vector3 mouse = new Vector3(mouseX, 0.0f, mouseY);
+
         rb.AddForce(movement * speedConst);
+
+        lookTarget.transform.localPosition = mouse;
+        playerModel.transform.LookAt(lookTarget.transform);
     }
 
     void Update()
     {
-        //Debug.Log(mousePosition);
-        //RotationRayCast();
-        RotatePlayer();
-    }
-    void RotationRayCast()
-    {
-        Ray ray = new Ray(playerModel.transform.position, lookTarget.transform.position-playerModel.transform.position);
-        Debug.DrawRay(ray.origin, ray.direction * 1000);
-    }
-    void RotatePlayer()
-    {
-        lookTarget.transform.localPosition = new Vector3(mousePosition.normalized.x,0.0f,mousePosition.normalized.y);
-        playerModel.transform.LookAt(lookTarget.transform);
+
     }
     void OnMove(InputValue movementValue)
     {
@@ -48,10 +42,12 @@ public class PlayerController : MonoBehaviour
         movementX = movementVector.x;
         movementY = movementVector.y;
     }
-    void OnMousePos(InputValue mousePos)
+    void OnMousePos(InputValue mouseIn)
     {
-        mousePosition = mousePos.Get<Vector2>();
-        mousePosition -= new Vector2(Screen.width / 2, Screen.height / 2);
+        Vector2 mousePos = mouseIn.Get<Vector2>() - new Vector2(Screen.width / 2, Screen.height / 2);
+        mousePos = mousePos.normalized;
+        mouseX = mousePos.x;
+        mouseY = mousePos.y;
     }
     void OnPrimaryFire()
     {
@@ -63,7 +59,30 @@ public class PlayerController : MonoBehaviour
     }
     void OnSecondaryFire()
     {
-        Ray hitscan = new Ray(gunEmitter.transform.position,  gunEmitter.transform.position-lookTarget.transform.position );
-        Debug.DrawRay(hitscan.origin, hitscan.direction * 1000,Color.red,0.5f);
+        Ray hitscan = new Ray(gunEmitter.transform.position,  gunEmitter.transform.position-lookTarget.transform.position);
+        Debug.DrawRay(hitscan.origin, hitscan.direction * 10f,Color.red,0.5f);
+        if(Physics.Raycast(hitscan, out RaycastHit hit, 10f))
+        {
+            if (hit.collider.CompareTag("Target"))
+            {
+                hit.collider.SendMessage("OnScannedHit");
+            }
+        }
+    }
+    void OnAbilityUse()
+    {
+
+    }
+    void OnGodToggle()
+    {
+        if (godMode)
+        {
+            godMode = false;
+        }
+        else 
+        { 
+            godMode = true;
+        }
+        
     }
 }

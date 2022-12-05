@@ -22,4 +22,8 @@ public class TestTarget : MonoBehaviour
             gameObject.GetComponent<MeshRenderer>().enabled = false;
         }
     }
+    void OnScannedHit()
+    {
+        gameObject.GetComponent<MeshRenderer>().enabled = true;
+    }
 }
