@@ -4,13 +4,20 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 public class PlayerController : MonoBehaviour
 {
+    private Transform modelTransform;
     private Rigidbody rb;
     private float movementX, movementY;
     public float speedConst = 0;
+    private Vector2 mousePosition;
+    public Camera mainCamera;
+    public GameObject lookTarget;
+    public GameObject playerModel;
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        modelTransform = playerModel.GetComponent<Transform>();
+        //mainCamera = GetComponentInChildren<Camera>();
     }
     void FixedUpdate()
     {
@@ -20,13 +27,29 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        Debug.Log(mousePosition);
+        RotationRayCast();
+        RotatePlayer();
+    }
+    void RotationRayCast()
+    {
+        Ray ray = new Ray(playerModel.transform.position, lookTarget.transform.position-playerModel.transform.position);
+        Debug.DrawRay(ray.origin, ray.direction * 1000);
+    }
+    void RotatePlayer()
+    {
+        lookTarget.transform.localPosition = new Vector3(mousePosition.normalized.x,0.0f,mousePosition.normalized.y);
+        modelTransform.LookAt(lookTarget.transform);
     }
     void OnMove(InputValue movementValue)
     {
-        Debug.Log("asda");
         Vector2 movementVector = movementValue.Get<Vector2>();
         movementX = movementVector.x;
         movementY = movementVector.y;
+    }
+    void OnMousePos(InputValue mousePos)
+    {
+        mousePosition = mousePos.Get<Vector2>();
+        mousePosition -= new Vector2(Screen.width / 2, Screen.height / 2);
     }
 }
