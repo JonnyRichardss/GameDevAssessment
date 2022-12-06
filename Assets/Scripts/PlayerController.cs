@@ -4,6 +4,8 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 public class PlayerController : MonoBehaviour
 {
+    private float meleeRadius = 1.3f;
+
     private Rigidbody rb;
     private float movementX, movementY;
     private float mouseX, mouseY;
@@ -16,7 +18,7 @@ public class PlayerController : MonoBehaviour
     public GameObject gunEmitter;
     public GameObject bulletPrefab;
 
-
+    public float health;
     void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -63,15 +65,24 @@ public class PlayerController : MonoBehaviour
         Debug.DrawRay(hitscan.origin, hitscan.direction * 10f,Color.red,0.5f);
         if(Physics.Raycast(hitscan, out RaycastHit hit, 10f))
         {
-            if (hit.collider.CompareTag("Target"))
+            if (hit.collider.CompareTag("Enemy"))
             {
                 hit.collider.SendMessage("OnScannedHit");
             }
         }
     }
+
     void OnAbilityUse()
     {
-
+        Collider[] RangeHits = Physics.OverlapSphere(playerModel.transform.position, meleeRadius);
+        Debug.Log(RangeHits.Length);
+       foreach (Collider c in RangeHits )
+        {
+            if (c.CompareTag("Enemy"))
+            {
+                c.SendMessage("OnMeleeHit");
+            }
+        }
     }
     void OnGodToggle()
     {
@@ -84,5 +95,10 @@ public class PlayerController : MonoBehaviour
             godMode = true;
         }
         
+    }
+    void OnDrawGizmos()
+    {
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireSphere(playerModel.transform.position, meleeRadius);
     }
 }

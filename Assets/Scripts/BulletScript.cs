@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem.HID;
 
 public class BulletScript : MonoBehaviour
 {
@@ -25,6 +26,12 @@ public class BulletScript : MonoBehaviour
     }
     private void OnCollisionEnter(Collision collision)
     {
+        if (collision.collider.CompareTag("Wall"))
+        {
+            Destroy(gameObject);
+            return;
+        }
+        collision.collider.SendMessage("OnProjHit");
         Destroy(gameObject);
     }
 }
