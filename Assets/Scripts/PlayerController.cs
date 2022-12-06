@@ -100,5 +100,7 @@ public class PlayerController : MonoBehaviour
     {
         Gizmos.color = Color.green;
         Gizmos.DrawWireSphere(playerModel.transform.position, meleeRadius);
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawSphere(lookTarget.transform.position, 0.1f);
     }
 }

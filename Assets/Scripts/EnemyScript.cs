@@ -31,3 +31,4 @@ public class EnemyScript : MonoBehaviour
         Debug.Log("Ow");
     }
 }
+
