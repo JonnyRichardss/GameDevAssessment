@@ -18,17 +18,18 @@ public class EnemyScript : MonoBehaviour
     }
     void OnScannedHit()
     {
-        health--;
-        Debug.Log("HP"+health);
+        Debug.Log("SCNA");
+        Destroy(gameObject);
     }
     void OnProjHit()
     {
-        health++;
-        Debug.Log("HP"+health); 
+        Debug.Log("PROJ");
+        Destroy(gameObject);
     }
     void OnMeleeHit()
     {
         Debug.Log("Ow");
+        Destroy(gameObject);
     }
 }
 
