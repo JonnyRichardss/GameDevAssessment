@@ -22,6 +22,7 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        mainCamera.transform.LookAt(rb.transform);
     }
     void FixedUpdate()
     {
@@ -61,6 +62,8 @@ public class PlayerController : MonoBehaviour
     }
     void OnSecondaryFire()
     {
+        //CHANGE RAY TO SPHERE - RADIUS DEPENDS ON CHARGE (makes more forviing)
+        //add effect at some point
         Ray hitscan = new Ray(gunEmitter.transform.position,  gunEmitter.transform.position-lookTarget.transform.position);
         Debug.DrawRay(hitscan.origin, hitscan.direction * 10f,Color.red,0.5f);
         if(Physics.Raycast(hitscan, out RaycastHit hit, 10f))
