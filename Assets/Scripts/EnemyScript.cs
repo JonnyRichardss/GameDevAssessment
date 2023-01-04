@@ -24,6 +24,7 @@ public class EnemyScript : MonoBehaviour
     {
         health = 10f;
         nav = GetComponent<NavMeshAgent>();
+        UpdateTarget(targetObject);
     }
 
     // Update is called once per frame
@@ -31,10 +32,14 @@ public class EnemyScript : MonoBehaviour
     {
         
     }
+    void FixedUpdate()
+    {
+        nav.destination = targetTransform.position;
+    }
     void Move()
     {
-
-
+        
+       
     }
     void Attack()
     {
@@ -49,7 +54,7 @@ public class EnemyScript : MonoBehaviour
                 //actually might make a sep boss script as they will prob have mult attks
         }
     }
-    void updateTarget(GameObject newTarget)
+    void UpdateTarget(GameObject newTarget)
     {
         targetObject = newTarget;
         targetTransform = newTarget.transform;

@@ -5,7 +5,10 @@ using UnityEngine;
 public class SpawnPointScript : MonoBehaviour
 {
     public GameObject enemyType;
+    public GameObject player;
     private GameObject newEnemy;
+    private EnemyScript newScript;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -19,6 +22,8 @@ public class SpawnPointScript : MonoBehaviour
         if (newEnemy == null)
         {
             newEnemy = Instantiate(enemyType,gameObject.transform.position,gameObject.transform.rotation);
+            newScript = newEnemy.GetComponent<EnemyScript>();
+            newScript.targetObject = player;
         }
     }
 }
