@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
+
 public class PlayerController : MonoBehaviour
 {
     private float meleeRadius = 1.3f;
@@ -11,8 +13,9 @@ public class PlayerController : MonoBehaviour
     private float mouseX, mouseY;
     private bool firing;
     private float lastFire = 0;
+    private float weaponCharge = 0;
     private bool godMode = false;
-
+    
     public float speedConst = 0;
     public float fireDelay = 0;
     public Camera mainCamera;
@@ -20,6 +23,7 @@ public class PlayerController : MonoBehaviour
     public GameObject playerModel;
     public GameObject gunEmitter;
     public GameObject bulletPrefab;
+    public TextMeshProUGUI basicInfoText;
 
     public float health;
     void Start()
@@ -44,6 +48,8 @@ public class PlayerController : MonoBehaviour
         {
             AutoFire();
         }
+        basicInfoText.text = string.Format("Health: {0} \nCharge: {1}", health, weaponCharge);
+        
     }
     void AutoFire()
     {
@@ -54,7 +60,8 @@ public class PlayerController : MonoBehaviour
             BulletScript script = newBullet.GetComponent<BulletScript>();
             newBullet.name = "PlayerShot";
             script.impulse = .5f;
-            script.lifetime = 2;
+            script.lifetime = 2f;
+            script.damage = 1f;
         }
     }
     void OnMove(InputValue movementValue)
@@ -73,15 +80,22 @@ public class PlayerController : MonoBehaviour
     void OnPrimaryFire(InputValue value)
     {
         firing = value.isPressed;
-        Debug.Log(value.isPressed);
     }
     void OnSecondaryFire()
     {
-        //CHANGE RAY TO SPHERE - RADIUS DEPENDS ON CHARGE (makes more forviing)
+
         //add effect at some point
+        float sphereRadius = 1.0f;
+        float rayLength = 100.0f;
         Ray hitscan = new Ray(gunEmitter.transform.position,  gunEmitter.transform.position-lookTarget.transform.position);
-        Debug.DrawRay(hitscan.origin, hitscan.direction * 10f,Color.red,0.5f);
-        if(Physics.SphereCast(hitscan,1f, out RaycastHit hit, 100f))
+        Vector3[] rayOrigins = { hitscan.origin, hitscan.origin + transform.InverseTransformVector(Vector3.right) * sphereRadius, hitscan.origin + transform.InverseTransformVector(Vector3.left) * sphereRadius};
+
+        foreach (Vector3 origin in rayOrigins)
+        {
+            Debug.DrawRay(origin, hitscan.direction * rayLength, Color.red, 0.5f);
+        }
+
+        if(Physics.SphereCast(hitscan,sphereRadius, out RaycastHit hit, rayLength))
         {
             if (hit.collider.CompareTag("Enemy"))
             {

@@ -7,6 +7,7 @@ public class BulletScript : MonoBehaviour
 {
     public float impulse;
     public float lifetime;
+    public float damage;
     private Rigidbody rb;
     // Start is called before the first frame update
     void Start()
@@ -33,7 +34,7 @@ public class BulletScript : MonoBehaviour
         }
         if (collision.collider.CompareTag("Enemy"))
         {
-            collision.collider.SendMessage("OnProjHit", 1.0f);
+            collision.collider.SendMessage("OnProjHit", damage);
             Destroy(gameObject);
         }
             
