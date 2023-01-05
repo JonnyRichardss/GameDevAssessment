@@ -25,7 +25,7 @@
                 },
                 {
                     "name": "PrimaryFire",
-                    "type": "Button",
+                    "type": "PassThrough",
                     "id": "f3933802-2827-4431-8c44-555e870457e7",
                     "expectedControlType": "Button",
                     "processors": "",

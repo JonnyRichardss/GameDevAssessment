@@ -9,9 +9,12 @@ public class PlayerController : MonoBehaviour
     private Rigidbody rb;
     private float movementX, movementY;
     private float mouseX, mouseY;
+    private bool firing;
+    private float lastFire = 0;
     private bool godMode = false;
 
     public float speedConst = 0;
+    public float fireDelay = 0;
     public Camera mainCamera;
     public GameObject lookTarget;
     public GameObject playerModel;
@@ -37,7 +40,22 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-
+        if (firing)
+        {
+            AutoFire();
+        }
+    }
+    void AutoFire()
+    {
+        if (Time.time - lastFire >= fireDelay)
+        {
+            lastFire = Time.time;
+            GameObject newBullet = Instantiate(bulletPrefab, gunEmitter.transform.position, playerModel.transform.rotation);
+            BulletScript script = newBullet.GetComponent<BulletScript>();
+            newBullet.name = "PlayerShot";
+            script.impulse = .5f;
+            script.lifetime = 2;
+        }
     }
     void OnMove(InputValue movementValue)
     {
@@ -52,13 +70,10 @@ public class PlayerController : MonoBehaviour
         mouseX = mousePos.x;
         mouseY = mousePos.y;
     }
-    void OnPrimaryFire()
+    void OnPrimaryFire(InputValue value)
     {
-        GameObject newBullet = Instantiate(bulletPrefab,gunEmitter.transform.position,playerModel.transform.rotation);
-        BulletScript script = newBullet.GetComponent<BulletScript>();
-        newBullet.name = "PlayerShot";
-        script.impulse = .5f;
-        script.lifetime = 2;
+        firing = value.isPressed;
+        Debug.Log(value.isPressed);
     }
     void OnSecondaryFire()
     {
@@ -66,11 +81,11 @@ public class PlayerController : MonoBehaviour
         //add effect at some point
         Ray hitscan = new Ray(gunEmitter.transform.position,  gunEmitter.transform.position-lookTarget.transform.position);
         Debug.DrawRay(hitscan.origin, hitscan.direction * 10f,Color.red,0.5f);
-        if(Physics.Raycast(hitscan, out RaycastHit hit, 10f))
+        if(Physics.SphereCast(hitscan,1f, out RaycastHit hit, 100f))
         {
             if (hit.collider.CompareTag("Enemy"))
             {
-                hit.collider.SendMessage("OnScannedHit");
+                hit.collider.SendMessage("OnScannedHit",5f);
             }
         }
     }
@@ -83,7 +98,7 @@ public class PlayerController : MonoBehaviour
         {
             if (c.CompareTag("Enemy"))
             {
-                c.SendMessage("OnMeleeHit");
+                c.SendMessage("OnMeleeHit",10f);
             }
         }
     }

@@ -123,6 +123,11 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 23800000, guid: e690c09a7696cad488954b1510dd3c0c, type: 2}
+--- !u!1 &43860483 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 686189130636772336, guid: ca0cd3241865a9e47a349c95a41c4cd3, type: 3}
+  m_PrefabInstance: {fileID: 3987020443364037893}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &303764956
 GameObject:
   m_ObjectHideFlags: 0
@@ -153,6 +158,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyType: {fileID: 5396699758527978023, guid: 8f140b2f038b82840819f24fea418bee, type: 3}
+  player: {fileID: 43860483}
 --- !u!4 &303764958
 Transform:
   m_ObjectHideFlags: 0
@@ -161,7 +167,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 303764956}
   m_LocalRotation: {x: -0, y: -1, z: -0, w: 0.0000029504295}
-  m_LocalPosition: {x: -2.336629, y: 0.82, z: 6.24}
+  m_LocalPosition: {x: -2.336629, y: 2.37, z: 6.24}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -778,7 +784,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 8
   m_IsActive: 1
 --- !u!4 &1228191491
 Transform:
@@ -895,7 +901,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!1001 &3987020443364037893
 PrefabInstance:
@@ -908,9 +914,21 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 2161109910561412934, guid: ca0cd3241865a9e47a349c95a41c4cd3, type: 3}
+      propertyPath: health
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 2161109910561412934, guid: ca0cd3241865a9e47a349c95a41c4cd3, type: 3}
+      propertyPath: fireRate
+      value: 0.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 2161109910561412934, guid: ca0cd3241865a9e47a349c95a41c4cd3, type: 3}
+      propertyPath: fireDelay
+      value: 0.1
+      objectReference: {fileID: 0}
     - target: {fileID: 6751031208817375495, guid: ca0cd3241865a9e47a349c95a41c4cd3, type: 3}
       propertyPath: m_RootOrder
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6751031208817375495, guid: ca0cd3241865a9e47a349c95a41c4cd3, type: 3}
       propertyPath: m_LocalPosition.x

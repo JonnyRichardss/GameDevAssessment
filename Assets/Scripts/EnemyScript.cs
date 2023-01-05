@@ -30,7 +30,7 @@ public class EnemyScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
     void FixedUpdate()
     {
@@ -59,22 +59,30 @@ public class EnemyScript : MonoBehaviour
         targetObject = newTarget;
         targetTransform = newTarget.transform;
     }
+    void TakeDamage(float damage)
+    {
+        health -= damage;
+        if (health <= 0.0f)
+        {
+            Destroy(gameObject);
+        }
+    }
     #region
     //messages
-    void OnScannedHit()
+    void OnScannedHit(float damage)
     {
         Debug.Log("SCNA");
-        Destroy(gameObject);
+        TakeDamage(damage);
     }
-    void OnProjHit()
+    void OnProjHit(float damage)
     {
         Debug.Log("PROJ");
-        Destroy(gameObject);
+        TakeDamage(damage);
     }
-    void OnMeleeHit()
+    void OnMeleeHit(float damage)
     {
         Debug.Log("Ow");
-        Destroy(gameObject);
+        TakeDamage(damage);
     }
     #endregion
 }

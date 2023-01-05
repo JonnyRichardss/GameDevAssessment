@@ -31,7 +31,11 @@ public class BulletScript : MonoBehaviour
             Destroy(gameObject);
             return;
         }
-        collision.collider.SendMessage("OnProjHit");
-        Destroy(gameObject);
+        if (collision.collider.CompareTag("Enemy"))
+        {
+            collision.collider.SendMessage("OnProjHit", 1.0f);
+            Destroy(gameObject);
+        }
+            
     }
 }
