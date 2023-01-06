@@ -13,11 +13,13 @@ public class PlayerController : MonoBehaviour
     private float mouseX, mouseY;
     private bool firing;
     private float lastFire = 0;
-    private float weaponCharge = 0;
+    private float weaponCharge = 1;
     private bool godMode = false;
     
     public float speedConst = 0;
     public float fireDelay = 0;
+    public float sphereRadius = 0.005f;
+    public float rayLength = 100.0f;
     public Camera mainCamera;
     public GameObject lookTarget;
     public GameObject playerModel;
@@ -25,6 +27,8 @@ public class PlayerController : MonoBehaviour
     public GameObject bulletPrefab;
     public TextMeshProUGUI basicInfoText;
 
+    private float hitDebugTimer = 0;
+    private bool hitDebug = false;
     public float health;
     void Start()
     {
@@ -49,6 +53,14 @@ public class PlayerController : MonoBehaviour
             AutoFire();
         }
         basicInfoText.text = string.Format("Health: {0} \nCharge: {1}", health, weaponCharge);
+        if (hitDebugTimer <= 0)
+        {
+            hitDebug = false;
+        }
+        else
+        {
+            hitDebugTimer -= Time.deltaTime;
+        }
         
     }
     void AutoFire()
@@ -62,6 +74,7 @@ public class PlayerController : MonoBehaviour
             script.impulse = .5f;
             script.lifetime = 2f;
             script.damage = 1f;
+            script.bulletParent = gameObject;
         }
     }
     void OnMove(InputValue movementValue)
@@ -85,21 +98,17 @@ public class PlayerController : MonoBehaviour
     {
 
         //add effect at some point
-        float sphereRadius = 1.0f;
-        float rayLength = 100.0f;
+        hitDebug = true;
+        hitDebugTimer = 1;
         Ray hitscan = new Ray(gunEmitter.transform.position,  gunEmitter.transform.position-lookTarget.transform.position);
-        Vector3[] rayOrigins = { hitscan.origin, hitscan.origin + transform.InverseTransformVector(Vector3.right) * sphereRadius, hitscan.origin + transform.InverseTransformVector(Vector3.left) * sphereRadius};
-
-        foreach (Vector3 origin in rayOrigins)
-        {
-            Debug.DrawRay(origin, hitscan.direction * rayLength, Color.red, 0.5f);
-        }
+        Debug.DrawRay(hitscan.origin, hitscan.direction*100f, Color.red, .5f);
 
         if(Physics.SphereCast(hitscan,sphereRadius, out RaycastHit hit, rayLength))
         {
             if (hit.collider.CompareTag("Enemy"))
             {
                 hit.collider.SendMessage("OnScannedHit",5f);
+                weaponCharge += 5f;
             }
         }
     }
@@ -113,6 +122,7 @@ public class PlayerController : MonoBehaviour
             if (c.CompareTag("Enemy"))
             {
                 c.SendMessage("OnMeleeHit",10f);
+                weaponCharge += 10f;
             }
         }
     }
@@ -134,5 +144,17 @@ public class PlayerController : MonoBehaviour
         Gizmos.DrawWireSphere(playerModel.transform.position, meleeRadius);
         Gizmos.color = Color.yellow;
         Gizmos.DrawSphere(lookTarget.transform.position, 0.1f);
+        if (hitDebug)
+        {
+            Vector3 rayVector = gunEmitter.transform.position - lookTarget.transform.position;
+            for(int i = 0; i < 40; i+=4)
+            {
+                Gizmos.DrawWireSphere(gunEmitter.transform.position + rayVector * i, sphereRadius*weaponCharge);
+            }
+        }
+    }
+    void OnDealtDamage(float damage)
+    {
+        weaponCharge += damage;
     }
 }
