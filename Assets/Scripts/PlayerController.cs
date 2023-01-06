@@ -18,7 +18,7 @@ public class PlayerController : MonoBehaviour
     
     public float speedConst = 0;
     public float fireDelay = 0;
-    public float sphereRadius = 0.005f;
+    private float sphereRadius = 0.005f;
     public float rayLength = 100.0f;
     public Camera mainCamera;
     public GameObject lookTarget;
@@ -27,6 +27,9 @@ public class PlayerController : MonoBehaviour
     public GameObject bulletPrefab;
     public TextMeshProUGUI basicInfoText;
 
+    private float hitDebugCharge = 1;
+    private Vector3 hitDebugPos;
+    private Vector3 hitDebugRay;
     private float hitDebugTimer = 0;
     private bool hitDebug = false;
     public float health;
@@ -61,6 +64,7 @@ public class PlayerController : MonoBehaviour
         {
             hitDebugTimer -= Time.deltaTime;
         }
+
         
     }
     void AutoFire()
@@ -96,23 +100,33 @@ public class PlayerController : MonoBehaviour
     }
     void OnSecondaryFire()
     {
-
+       
         //add effect at some point
         hitDebug = true;
         hitDebugTimer = 1;
+        hitDebugCharge = weaponCharge;
+        hitDebugPos = gunEmitter.transform.position;
+        hitDebugRay = gunEmitter.transform.position - lookTarget.transform.position;
         Ray hitscan = new Ray(gunEmitter.transform.position,  gunEmitter.transform.position-lookTarget.transform.position);
         Debug.DrawRay(hitscan.origin, hitscan.direction*100f, Color.red, .5f);
-
-        if(Physics.SphereCast(hitscan,sphereRadius, out RaycastHit hit, rayLength))
+        
+        if (Physics.SphereCast(hitscan,sphereRadius * weaponCharge, out RaycastHit hit, rayLength))
         {
             if (hit.collider.CompareTag("Enemy"))
             {
                 hit.collider.SendMessage("OnScannedHit",5f);
-                weaponCharge += 5f;
             }
         }
+        weaponCharge = 1;
     }
-
+    void AddCharge(float charge)
+    { 
+        weaponCharge += charge;
+        if (weaponCharge >= 100)
+        {
+            weaponCharge = 100;
+        }
+    }
     void OnAbilityUse()
     {
         Collider[] RangeHits = Physics.OverlapSphere(playerModel.transform.position, meleeRadius);
@@ -122,7 +136,7 @@ public class PlayerController : MonoBehaviour
             if (c.CompareTag("Enemy"))
             {
                 c.SendMessage("OnMeleeHit",10f);
-                weaponCharge += 10f;
+                AddCharge(10f);
             }
         }
     }
@@ -146,15 +160,14 @@ public class PlayerController : MonoBehaviour
         Gizmos.DrawSphere(lookTarget.transform.position, 0.1f);
         if (hitDebug)
         {
-            Vector3 rayVector = gunEmitter.transform.position - lookTarget.transform.position;
             for(int i = 0; i < 40; i+=4)
             {
-                Gizmos.DrawWireSphere(gunEmitter.transform.position + rayVector * i, sphereRadius*weaponCharge);
+                Gizmos.DrawWireSphere(hitDebugPos + hitDebugRay * i, sphereRadius*hitDebugCharge);
             }
         }
     }
     void OnDealtDamage(float damage)
     {
-        weaponCharge += damage;
+        AddCharge(damage);
     }
 }
