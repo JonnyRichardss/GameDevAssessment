@@ -1237,7 +1237,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2161109910561412934, guid: ca0cd3241865a9e47a349c95a41c4cd3, type: 3}
       propertyPath: sphereRadius
-      value: 0.005
+      value: 0.05
       objectReference: {fileID: 0}
     - target: {fileID: 2161109910561412934, guid: ca0cd3241865a9e47a349c95a41c4cd3, type: 3}
       propertyPath: basicInfoText
