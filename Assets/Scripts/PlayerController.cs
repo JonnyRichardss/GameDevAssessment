@@ -120,7 +120,7 @@ public class PlayerController : MonoBehaviour
         {
             if (hit.collider.CompareTag("Enemy"))
             {
-                hit.collider.SendMessage("OnScannedHit",5f);
+                hit.collider.SendMessage("OnScannedHit", .2f * weaponCharge);
             }
         }
         weaponCharge = 1;
