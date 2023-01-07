@@ -94,6 +94,12 @@ public class PlayerController : MonoBehaviour
         mouseX = mousePos.x;
         mouseY = mousePos.y;
     }
+    void OnStickTurn(InputValue inputValue)
+    {
+        mouseX = inputValue.Get<Vector2>().x;
+        mouseY = inputValue.Get<Vector2>().y;
+
+    }
     void OnPrimaryFire(InputValue value)
     {
         firing = value.isPressed;
