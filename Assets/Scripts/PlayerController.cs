@@ -9,13 +9,15 @@ public class PlayerController : MonoBehaviour
     private float meleeRadius = 1.3f;
 
     private Rigidbody rb;
+    private Animator anim;
     private float movementX, movementY;
     private float mouseX, mouseY;
     private bool firing;
     private float lastFire = 0;
     private float weaponCharge = 1;
     private bool godMode = false;
-    
+
+    public bool animating;
     public float speedConst = 0;
     public float fireDelay = 0;
     private float sphereRadius = 0.005f;
@@ -26,6 +28,7 @@ public class PlayerController : MonoBehaviour
     public GameObject gunEmitter;
     public GameObject bulletPrefab;
     public TextMeshProUGUI basicInfoText;
+    
 
     private float hitDebugCharge = 1;
     private Vector3 hitDebugPos;
@@ -37,23 +40,33 @@ public class PlayerController : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         mainCamera.transform.LookAt(rb.transform);
+        anim = GetComponent<Animator>();   
     }
     void FixedUpdate()
     {
         Vector3 movement = new Vector3(movementX, 0.0f, movementY);
-        Vector3 mouse = new Vector3(mouseX, 0.0f, mouseY);
+
 
         rb.AddForce(movement * speedConst);
 
-        lookTarget.transform.localPosition = mouse;
-        playerModel.transform.LookAt(lookTarget.transform);
+        
+        
     }
 
     void Update()
     {
+        if (!animating)
+        {
+            
+        Vector3 mouse = new Vector3(mouseX, 0.0f, mouseY);
+        lookTarget.transform.localPosition = mouse;
+        
+        }
+        playerModel.transform.LookAt(lookTarget.transform);
         if (firing)
         {
             AutoFire();
+           
         }
         basicInfoText.text = string.Format("Health: {0} \nCharge: {1}", health, weaponCharge);
         if (hitDebugTimer <= 0)
@@ -94,12 +107,7 @@ public class PlayerController : MonoBehaviour
         mouseX = mousePos.x;
         mouseY = mousePos.y;
     }
-    void OnStickTurn(InputValue inputValue)
-    {
-        mouseX = inputValue.Get<Vector2>().x;
-        mouseY = inputValue.Get<Vector2>().y;
 
-    }
     void OnPrimaryFire(InputValue value)
     {
         firing = value.isPressed;
@@ -135,6 +143,7 @@ public class PlayerController : MonoBehaviour
     }
     void OnAbilityUse()
     {
+        anim.SetTrigger("Spin");
         Collider[] RangeHits = Physics.OverlapSphere(playerModel.transform.position, meleeRadius);
         Debug.Log(RangeHits.Length);
        foreach (Collider c in RangeHits )
