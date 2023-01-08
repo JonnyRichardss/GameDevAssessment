@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 8717749233006856317}
   - component: {fileID: 5497451345867905936}
   - component: {fileID: 6224922257727271602}
+  - component: {fileID: 5180811864042222382}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -51,11 +52,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speedConst: 75
+  fireDelay: 0
+  rayLength: 100
   mainCamera: {fileID: 3987020443776596086}
   lookTarget: {fileID: 3987020444166091249}
   playerModel: {fileID: 3987020444421760177}
   gunEmitter: {fileID: 4343680351308112194}
   bulletPrefab: {fileID: 5339207906737198162, guid: e3adab67976324745b25fcd9cd8ea6e7, type: 3}
+  basicInfoText: {fileID: 0}
   health: 0
 --- !u!114 &8717749233006856317
 MonoBehaviour:
@@ -117,6 +121,26 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!95 &5180811864042222382
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 686189130636772336}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 872ba1eb6f8a9894694b8176b78b7ddc, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &1780192469416929454
 GameObject:
   m_ObjectHideFlags: 0
