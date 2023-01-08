@@ -146,6 +146,14 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
+    void OnDamageTaken(float damage)
+    {
+        health -= damage;
+        if (health <= 0.0f)
+        {
+            Destroy(gameObject);
+        }
+    }
     void OnGodToggle()
     {
         if (godMode)

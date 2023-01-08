@@ -13,11 +13,12 @@ public class EnemyScript : MonoBehaviour
     }
 
     public float health;
+    public float damage;
     public GameObject targetObject;
     public Transform targetTransform;
     public EnemyType attackType;
 
-
+    private float attackCD = 0;
     private NavMeshAgent nav;
     // Start is called before the first frame update
     void Start()
@@ -30,28 +31,44 @@ public class EnemyScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        nav.SetDestination(targetTransform.position);
+        TryAttack();
     }
     void FixedUpdate()
     {
-        nav.destination = targetTransform.position;
+
     }
     void Move()
     {
         
        
     }
-    void Attack()
+    bool TryAttack()
     {
-        switch (attackType)
+        if (attackCD <= 0)
         {
-            case EnemyType.Melee:
-                return;
-            case EnemyType.Ranged:
-                return;
-            case EnemyType.Boss:
-                return;
-                //actually might make a sep boss script as they will prob have mult attks
+            switch (attackType)
+            {
+                case EnemyType.Melee:
+                    if ((transform.position - targetTransform.position).magnitude < 1.2)
+                    {
+                        targetObject.SendMessage("OnDamageTaken", damage);
+                        attackCD = 1f;
+                        return (true);
+                    }
+                    break;
+                case EnemyType.Ranged:
+                    break;
+                case EnemyType.Boss:
+                    break;
+                    //actually might make a sep boss script as they will prob have mult attks
+            }
+            return (false);
+        }
+        else
+        {
+            attackCD -= Time.deltaTime;
+            return (false);
         }
     }
     void UpdateTarget(GameObject newTarget)
@@ -59,7 +76,7 @@ public class EnemyScript : MonoBehaviour
         targetObject = newTarget;
         targetTransform = newTarget.transform;
     }
-    void TakeDamage(float damage)
+    void OnDamageTaken(float damage)
     {
         health -= damage;
         if (health <= 0.0f)
@@ -72,17 +89,17 @@ public class EnemyScript : MonoBehaviour
     void OnScannedHit(float damage)
     {
         Debug.Log("SCNA");
-        TakeDamage(damage);
+        OnDamageTaken(damage);
     }
     void OnProjHit(float damage)
     {
         Debug.Log("PROJ");
-        TakeDamage(damage);
+        OnDamageTaken(damage);
     }
     void OnMeleeHit(float damage)
     {
         Debug.Log("Ow");
-        TakeDamage(damage);
+        OnDamageTaken(damage);
     }
     #endregion
 }
