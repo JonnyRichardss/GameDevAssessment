@@ -24,6 +24,7 @@ public class EnemyScript : MonoBehaviour
 
     private float attackCD = 0;
     private NavMeshAgent nav;
+    private Animator anim;
     // Start is called before the first frame update
     void Start()
     {
@@ -31,6 +32,7 @@ public class EnemyScript : MonoBehaviour
         health = 10f;
         nav = GetComponent<NavMeshAgent>();
         UpdateTarget(targetObject);
+        anim = GetComponent<Animator>();
     }
 
     // Update is called once per frame
@@ -52,6 +54,7 @@ public class EnemyScript : MonoBehaviour
     {
         if (attackCD <= 0)
         {
+            anim.SetTrigger("Attack");
             switch (attackType)
             {
                 case EnemyType.Melee:
@@ -90,8 +93,7 @@ public class EnemyScript : MonoBehaviour
             Destroy(gameObject);
         }
     }
-    #region
-    //messages
+    #region Messages
     void OnScannedHit(float damage)
     {
         Debug.Log("SCNA");

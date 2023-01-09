@@ -16,6 +16,7 @@ public class PlayerController : MonoBehaviour
     private float lastFire = 0;
     private float weaponCharge = 1;
     private bool godMode = false;
+    private float health;
 
     public bool animating;
     public float speedConst = 0;
@@ -28,19 +29,21 @@ public class PlayerController : MonoBehaviour
     public GameObject gunEmitter;
     public GameObject bulletPrefab;
     public TextMeshProUGUI basicInfoText;
-    
+    public float maxHealth;
 
     private float hitDebugCharge = 1;
     private Vector3 hitDebugPos;
     private Vector3 hitDebugRay;
     private float hitDebugTimer = 0;
     private bool hitDebug = false;
-    public float health;
+    
+   
     void Start()
     {
         rb = GetComponent<Rigidbody>();
         mainCamera.transform.LookAt(rb.transform);
-        anim = GetComponent<Animator>();   
+        anim = GetComponent<Animator>();
+        health = maxHealth;
     }
     void FixedUpdate()
     {

@@ -464,6 +464,7 @@ GameObject:
   - component: {fileID: 2319723818927116046}
   - component: {fileID: 36782613745847641}
   - component: {fileID: 3672638118074016100}
+  - component: {fileID: 2722440048334713984}
   m_Layer: 0
   m_Name: MeleeEnemy
   m_TagString: Enemy
@@ -520,7 +521,7 @@ MonoBehaviour:
   targetObject: {fileID: 0}
   targetTransform: {fileID: 0}
   attackType: 0
-  hitSound: {fileID: 0}
+  soundPlayer: {fileID: 0}
 --- !u!65 &2319723818927116046
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -652,6 +653,26 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!95 &2722440048334713984
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5396699758527978023}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: f700955a135be474fb844ad1b02c7a89, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &5396699758625205261
 GameObject:
   m_ObjectHideFlags: 0
