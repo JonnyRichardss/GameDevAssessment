@@ -18,11 +18,16 @@ public class EnemyScript : MonoBehaviour
     public Transform targetTransform;
     public EnemyType attackType;
 
+
+
+    public AudioSource soundPlayer;
+
     private float attackCD = 0;
     private NavMeshAgent nav;
     // Start is called before the first frame update
     void Start()
     {
+        soundPlayer = GetComponent<AudioSource>();
         health = 10f;
         nav = GetComponent<NavMeshAgent>();
         UpdateTarget(targetObject);
@@ -79,6 +84,7 @@ public class EnemyScript : MonoBehaviour
     void OnDamageTaken(float damage)
     {
         health -= damage;
+        soundPlayer.Play();
         if (health <= 0.0f)
         {
             Destroy(gameObject);
