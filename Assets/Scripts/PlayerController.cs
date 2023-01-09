@@ -119,9 +119,9 @@ public class PlayerController : MonoBehaviour
         hitDebug = true;
         hitDebugTimer = 1;
         hitDebugCharge = weaponCharge;
-        hitDebugPos = gunEmitter.transform.position;
-        hitDebugRay = gunEmitter.transform.position - lookTarget.transform.position;
-        Ray hitscan = new Ray(gunEmitter.transform.position,  gunEmitter.transform.position-lookTarget.transform.position);
+        Ray hitscan = new Ray(playerModel.transform.position,  gunEmitter.transform.position-playerModel.transform.position);
+        hitDebugPos = hitscan.origin;
+        hitDebugRay = hitscan.direction;
         Debug.DrawRay(hitscan.origin, hitscan.direction*100f, Color.red, 1f);
         
         if (Physics.SphereCast(hitscan,sphereRadius * weaponCharge, out RaycastHit hit, rayLength))
