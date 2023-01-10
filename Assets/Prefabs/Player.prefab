@@ -940,6 +940,7 @@ GameObject:
   - component: {fileID: 4653327420218616016}
   - component: {fileID: 4653327420218616023}
   - component: {fileID: 4653327420218616022}
+  - component: {fileID: 8647086600136301622}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -955,7 +956,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4653327420218616021}
   m_LocalRotation: {x: 0.565549, y: -0, z: -0, w: 0.8247147}
-  m_LocalPosition: {x: 0, y: 8, z: -2.5}
+  m_LocalPosition: {x: 0, y: 16, z: -1.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -987,20 +988,20 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 60
+  field of view: 55
   orthographic: 0
   orthographic size: 5
-  m_Depth: -1
+  m_Depth: 1
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 23
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
   m_TargetEye: 3
   m_HDR: 1
   m_AllowMSAA: 1
-  m_AllowDynamicResolution: 0
+  m_AllowDynamicResolution: 1
   m_ForceIntoRT: 0
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
@@ -1013,6 +1014,39 @@ AudioListener:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4653327420218616021}
   m_Enabled: 1
+--- !u!114 &8647086600136301622
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4653327420218616021}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a79441f348de89743a2939f4d699eac1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_RenderShadows: 1
+  m_RequiresDepthTextureOption: 2
+  m_RequiresOpaqueTextureOption: 2
+  m_CameraType: 0
+  m_Cameras: []
+  m_RendererIndex: -1
+  m_VolumeLayerMask:
+    serializedVersion: 2
+    m_Bits: 1
+  m_VolumeTrigger: {fileID: 0}
+  m_VolumeFrameworkUpdateModeOption: 2
+  m_RenderPostProcessing: 0
+  m_Antialiasing: 0
+  m_AntialiasingQuality: 2
+  m_StopNaN: 0
+  m_Dithering: 0
+  m_ClearDepth: 1
+  m_AllowXRRendering: 1
+  m_RequiresDepthTexture: 0
+  m_RequiresColorTexture: 0
+  m_Version: 2
 --- !u!1 &4653327420275255311
 GameObject:
   m_ObjectHideFlags: 0
@@ -1353,7 +1387,9 @@ MonoBehaviour:
   gunEmitter: {fileID: 5440514506237243875}
   bulletPrefab: {fileID: 5339207906737198162, guid: e3adab67976324745b25fcd9cd8ea6e7, type: 3}
   basicInfoText: {fileID: 0}
-  health: 10
+  healthBar: {fileID: 0}
+  chargeBar: {fileID: 0}
+  maxHealth: 0
 --- !u!114 &1098007390315337948
 MonoBehaviour:
   m_ObjectHideFlags: 0

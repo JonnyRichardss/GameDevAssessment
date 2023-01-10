@@ -43,8 +43,8 @@ public class PlayerController : MonoBehaviour
    
     void Start()
     {
-        SetBarColor(healthBar, Color.red);
-        SetBarColor(chargeBar, Color.yellow);
+        healthBar.SendMessage("OnSetColour", Color.red);
+        chargeBar.SendMessage("OnSetColour", Color.yellow);
         rb = GetComponent<Rigidbody>();
         mainCamera.transform.LookAt(rb.transform);
         anim = GetComponent<Animator>();
@@ -77,8 +77,8 @@ public class PlayerController : MonoBehaviour
            
         }
         basicInfoText.text = string.Format("Health: {0} \nCharge: {1}", health, weaponCharge);
-        healthBar.value = health;
-        chargeBar.value = weaponCharge;
+        healthBar.SendMessage("OnUpdateValue",health);
+        chargeBar.SendMessage("OnUpdateValue", weaponCharge);
         if (hitDebugTimer <= 0)
         {
             hitDebug = false;
@@ -142,7 +142,7 @@ public class PlayerController : MonoBehaviour
             }
         }
         weaponCharge = 1;
-        SetBarColor(chargeBar, Color.yellow);
+        chargeBar.SendMessage("OnSetColour", Color.yellow);
     }
     void AddCharge(float charge)
     { 
@@ -150,7 +150,7 @@ public class PlayerController : MonoBehaviour
         if (weaponCharge >= 100)
         {
             weaponCharge = 100;
-            SetBarColor(chargeBar, Color.green);
+            chargeBar.SendMessage("OnSetColour", Color.green);
         }
     }
     void OnAbilityUse()
@@ -181,25 +181,16 @@ public class PlayerController : MonoBehaviour
         if (godMode)
         {
             godMode = false;
-            SetBarColor(healthBar,Color.red);
+            healthBar.SendMessage("OnSetColour",Color.red);
         }
         else 
         {
             godMode = true;
-            SetBarColor(healthBar,Color.cyan);
+            healthBar.SendMessage("OnSetColour", Color.cyan);
 
         }
     }
-    void SetBarColor(Slider bar,Color colour)
-    {
-        foreach (Image child in bar.GetComponentsInChildren<Image>())
-        {
-            if (child.name != "Border")
-            {
-                child.color = colour;
-            }
-        }
-    }
+
     void OnDrawGizmos()
     {
         Gizmos.color = Color.green;
