@@ -43,6 +43,8 @@ public class PlayerController : MonoBehaviour
    
     void Start()
     {
+        SetBarColor(healthBar, Color.red);
+        SetBarColor(chargeBar, Color.yellow);
         rb = GetComponent<Rigidbody>();
         mainCamera.transform.LookAt(rb.transform);
         anim = GetComponent<Animator>();
@@ -140,6 +142,7 @@ public class PlayerController : MonoBehaviour
             }
         }
         weaponCharge = 1;
+        SetBarColor(chargeBar, Color.yellow);
     }
     void AddCharge(float charge)
     { 
@@ -147,6 +150,7 @@ public class PlayerController : MonoBehaviour
         if (weaponCharge >= 100)
         {
             weaponCharge = 100;
+            SetBarColor(chargeBar, Color.green);
         }
     }
     void OnAbilityUse()
@@ -177,12 +181,24 @@ public class PlayerController : MonoBehaviour
         if (godMode)
         {
             godMode = false;
+            SetBarColor(healthBar,Color.red);
         }
         else 
-        { 
+        {
             godMode = true;
+            SetBarColor(healthBar,Color.cyan);
+
         }
-        
+    }
+    void SetBarColor(Slider bar,Color colour)
+    {
+        foreach (Image child in bar.GetComponentsInChildren<Image>())
+        {
+            if (child.name != "Border")
+            {
+                child.color = colour;
+            }
+        }
     }
     void OnDrawGizmos()
     {
