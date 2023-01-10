@@ -517,7 +517,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 10
-  damage: 1
+  damage: 10
   targetObject: {fileID: 0}
   targetTransform: {fileID: 0}
   attackType: 0

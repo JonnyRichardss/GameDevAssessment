@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
@@ -29,6 +30,8 @@ public class PlayerController : MonoBehaviour
     public GameObject gunEmitter;
     public GameObject bulletPrefab;
     public TextMeshProUGUI basicInfoText;
+    public Slider healthBar;
+    public Slider chargeBar;
     public float maxHealth;
 
     private float hitDebugCharge = 1;
@@ -72,6 +75,8 @@ public class PlayerController : MonoBehaviour
            
         }
         basicInfoText.text = string.Format("Health: {0} \nCharge: {1}", health, weaponCharge);
+        healthBar.value = health;
+        chargeBar.value = weaponCharge;
         if (hitDebugTimer <= 0)
         {
             hitDebug = false;
@@ -160,6 +165,7 @@ public class PlayerController : MonoBehaviour
     }
     void OnDamageTaken(float damage)
     {
+        if (godMode) {return;}
         health -= damage;
         if (health <= 0.0f)
         {
