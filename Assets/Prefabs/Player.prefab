@@ -1037,7 +1037,7 @@ MonoBehaviour:
     m_Bits: 1
   m_VolumeTrigger: {fileID: 0}
   m_VolumeFrameworkUpdateModeOption: 2
-  m_RenderPostProcessing: 0
+  m_RenderPostProcessing: 1
   m_Antialiasing: 0
   m_AntialiasingQuality: 2
   m_StopNaN: 0
@@ -1391,6 +1391,7 @@ MonoBehaviour:
   healthBar: {fileID: 0}
   chargeBar: {fileID: 0}
   maxHealth: 0
+  hitspeed: 0
 --- !u!114 &1098007390315337948
 MonoBehaviour:
   m_ObjectHideFlags: 0
