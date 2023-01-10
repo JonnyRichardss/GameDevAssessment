@@ -40,8 +40,8 @@ public class PlayerController : MonoBehaviour
     private Vector3 hitDebugRay;
     private float hitDebugTimer = 0;
     private bool hitDebug = false;
-    
-   
+
+    public float hitspeed;
     void Start()
     {
         healthBar.SendMessage("OnSetColour", Color.red);
@@ -148,7 +148,7 @@ public class PlayerController : MonoBehaviour
         BulletScript script = newBullet.GetComponent<BulletScript>();
         newBullet.name = "HitscanVisual";
         script.impulse =  2f;
-        script.lifetime = 4f;
+        script.lifetime = 1f;
         script.damage = 0f;
         script.bulletParent = gameObject;
     }
