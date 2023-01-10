@@ -29,6 +29,7 @@ public class PlayerController : MonoBehaviour
     public GameObject playerModel;
     public GameObject gunEmitter;
     public GameObject bulletPrefab;
+    public GameObject hitscanPrefab;
     public TextMeshProUGUI basicInfoText;
     public Slider healthBar;
     public Slider chargeBar;
@@ -143,6 +144,13 @@ public class PlayerController : MonoBehaviour
         }
         weaponCharge = 1;
         chargeBar.SendMessage("OnSetColour", Color.yellow);
+        GameObject newBullet = Instantiate(hitscanPrefab, gunEmitter.transform.position, playerModel.transform.rotation);
+        BulletScript script = newBullet.GetComponent<BulletScript>();
+        newBullet.name = "HitscanVisual";
+        script.impulse =  2f;
+        script.lifetime = 4f;
+        script.damage = 0f;
+        script.bulletParent = gameObject;
     }
     void AddCharge(float charge)
     { 

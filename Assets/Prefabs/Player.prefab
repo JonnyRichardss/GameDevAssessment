@@ -1386,6 +1386,7 @@ MonoBehaviour:
   playerModel: {fileID: 4653327419045557264}
   gunEmitter: {fileID: 5440514506237243875}
   bulletPrefab: {fileID: 5339207906737198162, guid: e3adab67976324745b25fcd9cd8ea6e7, type: 3}
+  hitscanPrefab: {fileID: 5339207906737198162, guid: 9d1767a445d15dd409f828ab7c0aa2b1, type: 3}
   basicInfoText: {fileID: 0}
   healthBar: {fileID: 0}
   chargeBar: {fileID: 0}
