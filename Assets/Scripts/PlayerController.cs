@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.VFX;
 using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
@@ -103,6 +104,7 @@ public class PlayerController : MonoBehaviour
             script.lifetime = 2f;
             script.damage = 1f;
             script.bulletParent = gameObject;
+            
         }
     }
     void OnMove(InputValue movementValue)
@@ -142,15 +144,18 @@ public class PlayerController : MonoBehaviour
                 hit.collider.SendMessage("OnScannedHit", .2f * weaponCharge);
             }
         }
+        for (float i = 2f; i > .2f; i -= 1.8f)
+        {
+            GameObject newBullet = Instantiate(hitscanPrefab, gunEmitter.transform.position, playerModel.transform.rotation);
+            ScanEffectScript script = newBullet.GetComponent<ScanEffectScript>();
+            newBullet.name = "HitscanVisual";
+            script.impulse = i;
+            script.lifetime = 1f;
+            script.charge = weaponCharge;
+        }
         weaponCharge = 1;
         chargeBar.SendMessage("OnSetColour", Color.yellow);
-        GameObject newBullet = Instantiate(hitscanPrefab, gunEmitter.transform.position, playerModel.transform.rotation);
-        BulletScript script = newBullet.GetComponent<BulletScript>();
-        newBullet.name = "HitscanVisual";
-        script.impulse =  2f;
-        script.lifetime = 1f;
-        script.damage = 0f;
-        script.bulletParent = gameObject;
+        
     }
     void AddCharge(float charge)
     { 

@@ -9,11 +9,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5352548504842206576}
-  - component: {fileID: 2114256119421299393}
   - component: {fileID: 9166948416821573623}
   - component: {fileID: 6638130275286727360}
   - component: {fileID: 3102965440939606283}
   - component: {fileID: 260270202354511634}
+  - component: {fileID: -4612406160242684410}
   m_Layer: 0
   m_Name: HitScanEffect
   m_TagString: Bullet
@@ -28,30 +28,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5339207906737198162}
-  m_LocalRotation: {x: -0, y: -0.030316837, z: -0, w: 0.9995403}
-  m_LocalPosition: {x: 0, y: 5, z: 0.682}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0.26}
   m_LocalScale: {x: 0.2, y: 0.2, z: 0.2}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: -3.475, z: 0}
---- !u!114 &2114256119421299393
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5339207906737198162}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8e5cc25036a0ed940b748be897f872ca, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  impulse: 0
-  lifetime: 1
-  damage: 0
-  bulletParent: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!54 &9166948416821573623
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -211,13 +195,13 @@ VisualEffect:
       - m_Value: 1
         m_Name: SparkLifetime
         m_Overridden: 1
-      - m_Value: 100
+      - m_Value: 20
         m_Name: SparkSpeed
         m_Overridden: 1
-      - m_Value: 0
+      - m_Value: 0.1
         m_Name: NoiseRange
         m_Overridden: 1
-      - m_Value: 1000
+      - m_Value: 50
         m_Name: SpawnRate
         m_Overridden: 1
       - m_Value: 2
@@ -242,7 +226,7 @@ VisualEffect:
       - m_Value: {x: 90, y: 0, z: 0}
         m_Name: Cone_transform_angles
         m_Overridden: 1
-      - m_Value: {x: 0, y: 0, z: -8}
+      - m_Value: {x: 0, y: 0, z: 0}
         m_Name: Cone_transform_position
         m_Overridden: 1
     m_Vector4f:
@@ -301,3 +285,19 @@ VFXRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!114 &-4612406160242684410
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5339207906737198162}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e783b1770bf549e4bbfce99cc669a101, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  impulse: 0
+  lifetime: 0
+  ownPrefab: {fileID: 0}
+  isFollower: 0
