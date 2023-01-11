@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5396699756885331724}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Arms
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -44,7 +44,7 @@ GameObject:
   - component: {fileID: 5396699757546377298}
   - component: {fileID: 5396699757546377300}
   - component: {fileID: 5396699757546377299}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Sphere (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -128,7 +128,7 @@ GameObject:
   - component: {fileID: 5396699757578516715}
   - component: {fileID: 5396699757578516717}
   - component: {fileID: 5396699757578516716}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Sphere
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -212,7 +212,7 @@ GameObject:
   - component: {fileID: 5396699757632686101}
   - component: {fileID: 5396699757632686104}
   - component: {fileID: 5396699757632686103}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Left
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -295,7 +295,7 @@ GameObject:
   - component: {fileID: 5396699758185248844}
   - component: {fileID: 5396699758185248846}
   - component: {fileID: 5396699758185248845}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Sphere
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -378,7 +378,7 @@ GameObject:
   - component: {fileID: 5396699758209807204}
   - component: {fileID: 5396699758209807206}
   - component: {fileID: 5396699758209807205}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Sphere
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -465,7 +465,7 @@ GameObject:
   - component: {fileID: 36782613745847641}
   - component: {fileID: 3672638118074016100}
   - component: {fileID: 2722440048334713984}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: MeleeEnemy
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -521,7 +521,7 @@ MonoBehaviour:
   targetObject: {fileID: 0}
   targetTransform: {fileID: 0}
   attackType: 0
-  soundPlayer: {fileID: 0}
+  PowerupPrefab: {fileID: 4227013873459334817, guid: 853cd30fcc102524aa07d054fb926c25, type: 3}
 --- !u!65 &2319723818927116046
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -684,7 +684,7 @@ GameObject:
   - component: {fileID: 5396699758625205262}
   - component: {fileID: 5396699758625205297}
   - component: {fileID: 5396699758625205296}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: EnemyModel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -769,7 +769,7 @@ GameObject:
   - component: {fileID: 5396699758767740525}
   - component: {fileID: 5396699758767740432}
   - component: {fileID: 5396699758767740527}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Right
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -850,7 +850,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5396699758801761762}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Eyes
   m_TagString: Untagged
   m_Icon: {fileID: 0}

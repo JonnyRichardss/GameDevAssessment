@@ -39,6 +39,8 @@ public class PowerupScript : MonoBehaviour
                 break;
         }
         vfx.SetVector4("Color", (Vector4)MakeHDRColour(colour, 6f));
+        Physics.IgnoreLayerCollision(6, 7);
+        Physics.IgnoreLayerCollision(7, 8);
     }
 
     // Update is called once per frame
@@ -57,6 +59,13 @@ public class PowerupScript : MonoBehaviour
         if (collision.collider.CompareTag("Player"))
         {
             Destroy(gameObject);
+        }
+        if (collision.collider.CompareTag("Floor"))
+        {
+            Rigidbody rb = GetComponent<Rigidbody>();
+            rb.velocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+            rb.isKinematic = true;
         }
         
     }

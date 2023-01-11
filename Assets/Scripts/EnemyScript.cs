@@ -17,10 +17,11 @@ public class EnemyScript : MonoBehaviour
     public GameObject targetObject;
     public Transform targetTransform;
     public EnemyType attackType;
+    public GameObject PowerupPrefab;
 
 
 
-    public AudioSource soundPlayer;
+    private AudioSource soundPlayer;
 
     private float attackCD = 0;
     private NavMeshAgent nav;
@@ -33,6 +34,7 @@ public class EnemyScript : MonoBehaviour
         nav = GetComponent<NavMeshAgent>();
         UpdateTarget(targetObject);
         anim = GetComponent<Animator>();
+        Physics.IgnoreLayerCollision(6, 7);
     }
 
     // Update is called once per frame
@@ -45,14 +47,44 @@ public class EnemyScript : MonoBehaviour
     {
 
     }
-    void Move()
+    void SpawnPowerup()
     {
-        
-       
+         if( Random.value <= 0.1f)
+        {
+            float rand1 = Random.Range(.1f,.2f);
+            float rand2 = Random.Range(.1f,.2f);
+            if (Random.value > 0.5) { rand1 = 0 - rand1; }
+            if (Random.value > 0.5) { rand2 = 0 - rand1; }
+            GameObject powerup = Instantiate(PowerupPrefab,transform.position+(new Vector3(0f,1f,0f)),transform.rotation);
+            PowerupScript script = powerup.GetComponent<PowerupScript>();
+            Rigidbody rb = powerup.GetComponent<Rigidbody>();
+            Vector3 escapeVector = Vector3.Lerp(Vector3.up, Vector3.right, rand1);
+            rb.AddForce(Vector3.Lerp(escapeVector,Vector3.forward,rand2)*10f,ForceMode.Impulse);
+            PowerupScript.PowerUpType type;
+            switch (Mathf.FloorToInt(Random.value*3))
+            {
+                case 0:
+                    type = PowerupScript.PowerUpType.Health;
+                    break;
+                case 1:
+                    type = PowerupScript.PowerUpType.Charge;
+                    break;
+                case 2:
+                    type = PowerupScript.PowerUpType.Damage;
+                    break;
+                default:
+                    type = PowerupScript.PowerUpType.Health;
+                    Debug.Log("Rounding problem with powerup spawn");
+                    break;
+
+            }
+            script.type = type;
+        }
+
     }
     bool TryAttack()
     {
-        if (attackCD <= 0)
+        if (attackCD <= 0f)
         {
             anim.SetTrigger("Attack");
             switch (attackType)
@@ -90,6 +122,7 @@ public class EnemyScript : MonoBehaviour
         soundPlayer.Play();
         if (health <= 0.0f)
         {
+            SpawnPowerup();
             Destroy(gameObject);
         }
     }

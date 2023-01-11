@@ -16,6 +16,7 @@ public class BulletScript : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         rb.AddForce(impulse*transform.forward,ForceMode.Impulse);
+        Physics.IgnoreLayerCollision(7, 8);
     }
 
     // Update is called once per frame
