@@ -11,7 +11,7 @@ public class PowerupScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        basePos = transform.position;
+        
         vfx = GetComponent<VisualEffect>();
         vfx.SetVector4("Color", (Vector4)MakeHDRColour(Color.green, 6f));
     }
@@ -19,8 +19,8 @@ public class PowerupScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
-        transform.position = basePos+new Vector3(0f,amplitudeMult*Mathf.Sin(Time.time*periodMult),0f);
+  
+        transform.localPosition = new Vector3(0f,amplitudeMult*Mathf.Sin(Time.time*periodMult),0f);
     }
     Color MakeHDRColour(Color colour,float intensity)
     {
