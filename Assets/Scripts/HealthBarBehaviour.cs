@@ -15,10 +15,8 @@ public class HealthBarBehaviour : MonoBehaviour
     public Sprite iconGod;
     private Image barImage;
     private Image icon;
-    // Start is called before the first frame update
-    void Start()
+    private void Awake()
     {
-
         bar = GetComponent<Slider>();
         Image[] images = GetComponentsInChildren<Image>();
         foreach (Image image in images)
@@ -32,6 +30,12 @@ public class HealthBarBehaviour : MonoBehaviour
                 icon = image;
             }
         }
+    }
+    // Start is called before the first frame update
+    void Start()
+    {
+
+        
     }
     public void OnUpdateValue(float value)
     {

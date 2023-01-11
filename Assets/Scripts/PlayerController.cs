@@ -31,7 +31,6 @@ public class PlayerController : MonoBehaviour
     public GameObject gunEmitter;
     public GameObject bulletPrefab;
     public GameObject hitscanPrefab;
-    public TextMeshProUGUI basicInfoText;
     public Slider healthBar;
     public Slider chargeBar;
     public float maxHealth;
@@ -78,10 +77,7 @@ public class PlayerController : MonoBehaviour
             AutoFire();
            
         }
-        if (basicInfoText != null)
-        {
-            basicInfoText.text = string.Format("Health: {0} \nCharge: {1}", health, weaponCharge);
-        }
+
         healthBar.SendMessage("OnUpdateValue",health);
         chargeBar.SendMessage("OnUpdateValue", weaponCharge);
         if (hitDebugTimer <= 0)
