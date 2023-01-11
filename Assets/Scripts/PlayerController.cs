@@ -25,6 +25,8 @@ public class PlayerController : MonoBehaviour
     public float fireDelay = 0;
     private float sphereRadius = 0.005f;
     public float rayLength = 100.0f;
+    public float baseBulletDamage;
+    public float baseKickDamage;
     public Camera mainCamera;
     public GameObject lookTarget;
     public GameObject playerModel;
@@ -35,15 +37,17 @@ public class PlayerController : MonoBehaviour
     public Slider chargeBar;
     public float maxHealth;
 
-    private float hitDebugCharge = 1;
-    private Vector3 hitDebugPos;
-    private Vector3 hitDebugRay;
-    private float hitDebugTimer = 0;
-    private bool hitDebug = false;
+    private float healthPowerTimer;
+    private float chargePowerTimer;
+    private float damagePowerTimer;
+    private float bulletDamage;
+    private float kickDamage;
 
     public float hitspeed;
     void Start()
     {
+        bulletDamage = baseBulletDamage;
+        kickDamage = baseKickDamage;
         healthBar.SendMessage("OnSetColour", Color.red);
         chargeBar.SendMessage("OnSetColour", Color.yellow);
         rb = GetComponent<Rigidbody>();
@@ -66,12 +70,11 @@ public class PlayerController : MonoBehaviour
     {
         if (!animating)
         {
-            
         Vector3 mouse = new Vector3(mouseX, 0.0f, mouseY);
         lookTarget.transform.localPosition = mouse;
-        
         }
         playerModel.transform.LookAt(lookTarget.transform);
+
         if (firing)
         {
             AutoFire();
@@ -80,14 +83,7 @@ public class PlayerController : MonoBehaviour
 
         healthBar.SendMessage("OnUpdateValue",health);
         chargeBar.SendMessage("OnUpdateValue", weaponCharge);
-        if (hitDebugTimer <= 0)
-        {
-            hitDebug = false;
-        }
-        else
-        {
-            hitDebugTimer -= Time.deltaTime;
-        }
+        ApplyPowerups();
 
         
     }
@@ -101,7 +97,7 @@ public class PlayerController : MonoBehaviour
             newBullet.name = "PlayerShot";
             script.impulse = .5f;
             script.lifetime = 2f;
-            script.damage = 1f;
+            script.damage = bulletDamage;
             script.bulletParent = gameObject;
             
         }
@@ -126,21 +122,14 @@ public class PlayerController : MonoBehaviour
     }
     void OnSecondaryFire()
     {
-       
-        //add effect at some point
-        hitDebug = true;
-        hitDebugTimer = 1;
-        hitDebugCharge = weaponCharge;
         Ray hitscan = new Ray(playerModel.transform.position,  gunEmitter.transform.position-playerModel.transform.position);
-        hitDebugPos = hitscan.origin;
-        hitDebugRay = hitscan.direction;
         Debug.DrawRay(hitscan.origin, hitscan.direction*100f, Color.red, 1f);
         
         if (Physics.SphereCast(hitscan,sphereRadius * weaponCharge, out RaycastHit hit, rayLength))
         {
             if (hit.collider.CompareTag("Enemy"))
             {
-                hit.collider.SendMessage("OnScannedHit", .2f * weaponCharge);
+                hit.collider.SendMessage("OnScannedHit", bulletDamage/10f * weaponCharge);
             }
         }
         for (float i = 2f; i > .2f; i -= 1.8f)
@@ -156,12 +145,17 @@ public class PlayerController : MonoBehaviour
         chargeBar.SendMessage("OnSetColour", Color.yellow);
         
     }
+    void ClampValues()
+    {
+        if (health >= maxHealth) {health = maxHealth;}
+        if (weaponCharge >= 100f) {weaponCharge = 100f;}
+    }
     void AddCharge(float charge)
     { 
         weaponCharge += charge;
-        if (weaponCharge >= 100)
+        if (weaponCharge >= 100f)
         {
-            weaponCharge = 100;
+            weaponCharge = 100f;
             chargeBar.SendMessage("OnSetColour", Color.green);
         }
     }
@@ -174,8 +168,9 @@ public class PlayerController : MonoBehaviour
         {
             if (c.CompareTag("Enemy"))
             {
-                c.SendMessage("OnMeleeHit",10f);
-                AddCharge(10f);
+                c.SendMessage("OnMeleeHit",kickDamage);
+                AddCharge(kickDamage);
+                //ADD KB YOU BUFFON
             }
         }
     }
@@ -202,20 +197,56 @@ public class PlayerController : MonoBehaviour
 
         }
     }
-
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.collider.CompareTag("Powerup"))
+        {
+            PowerupScript script = collision.collider.GetComponent<PowerupScript>();
+            switch (script.type)
+            {
+                case PowerupScript.PowerUpType.Health:
+                    healthPowerTimer = 10f;
+                    break;
+                case PowerupScript.PowerUpType.Charge:
+                    chargePowerTimer = 10f;
+                    break;
+                case PowerupScript.PowerUpType.Damage:
+                    damagePowerTimer = 10f;
+                    break;
+            }
+        }
+    }
+    private void ApplyPowerups()
+    {
+        Debug.Log(healthPowerTimer + ","+chargePowerTimer + "," + damagePowerTimer);
+        if(healthPowerTimer >= 0)
+        {
+            healthPowerTimer -= Time.deltaTime;
+            health += Time.deltaTime * 4f;
+        }
+        if (chargePowerTimer > 0)
+        {
+            chargePowerTimer -= Time.deltaTime;
+            weaponCharge += Time.deltaTime * 4f;
+        }
+        if (damagePowerTimer >= 0)
+        {
+            damagePowerTimer -= Time.deltaTime;
+            bulletDamage = baseBulletDamage * 2f;
+            kickDamage = baseKickDamage * 5f;
+        }
+        else
+        {
+            bulletDamage = baseBulletDamage;
+            kickDamage = baseKickDamage;
+        }
+    }
     void OnDrawGizmos()
     {
         Gizmos.color = Color.green;
         Gizmos.DrawWireSphere(playerModel.transform.position, meleeRadius);
         Gizmos.color = Color.yellow;
         Gizmos.DrawSphere(lookTarget.transform.position, 0.1f);
-        if (hitDebug)
-        {
-            for(int i = 0; i < 40; i+=4)
-            {
-                Gizmos.DrawWireSphere(hitDebugPos + hitDebugRay * i, sphereRadius*hitDebugCharge);
-            }
-        }
     }
     void OnDealtDamage(float damage)
     {
