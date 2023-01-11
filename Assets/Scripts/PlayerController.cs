@@ -78,7 +78,10 @@ public class PlayerController : MonoBehaviour
             AutoFire();
            
         }
-        basicInfoText.text = string.Format("Health: {0} \nCharge: {1}", health, weaponCharge);
+        if (basicInfoText != null)
+        {
+            basicInfoText.text = string.Format("Health: {0} \nCharge: {1}", health, weaponCharge);
+        }
         healthBar.SendMessage("OnUpdateValue",health);
         chargeBar.SendMessage("OnUpdateValue", weaponCharge);
         if (hitDebugTimer <= 0)
