@@ -19,7 +19,7 @@ public class MainGamemode : MonoBehaviour
     void Update()
     {
         modeTimer -= Time.deltaTime;
-        UItext.text = string.Format("Score: {0}\nTime Left: {1}", VariableHolder.playerScore, modeTimer);
+        UItext.text = string.Format("Score: {0}\nTime Left: {1}", VariableHolder.playerScore, Mathf.RoundToInt(modeTimer));
         if (modeTimer <= 0)
         {
             SceneManager.LoadScene("BossCutscene");
