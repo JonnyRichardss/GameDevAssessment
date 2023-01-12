@@ -42,6 +42,8 @@ public class PlayerController : MonoBehaviour
     private float chargePowerTimer=0;
     private float damagePowerTimer=0;
     private float lastFire = 0;
+    private float kickCD;
+    private float railCD;
     private bool firing;
     private bool godMode = false;
 
@@ -86,7 +88,8 @@ public class PlayerController : MonoBehaviour
 
         UpdateBars();
         ApplyPowerups();
-
+        kickCD -= Time.deltaTime;
+        railCD -= Time.deltaTime;
         
     }
     #endregion
@@ -159,40 +162,47 @@ public class PlayerController : MonoBehaviour
     }
     void OnSecondaryFire()
     {
-        Ray hitscan = new Ray(playerModel.position,  gunEmitter.position-playerModel.position);
-        Debug.DrawRay(hitscan.origin, hitscan.direction*100f, Color.red, 1f);
+        if (railCD > 0)
+        {
+            Ray hitscan = new Ray(playerModel.position, gunEmitter.position - playerModel.position);
+            Debug.DrawRay(hitscan.origin, hitscan.direction * 100f, Color.red, 1f);
 
-        foreach (RaycastHit hit in Physics.SphereCastAll(hitscan, sphereRadius * weaponCharge, rayLength))
-        {
-            if (hit.collider.CompareTag("Enemy"))
+            foreach (RaycastHit hit in Physics.SphereCastAll(hitscan, sphereRadius * weaponCharge, rayLength))
             {
-                hit.collider.SendMessage("OnScannedHit", bulletDamage / 10f * weaponCharge);
+                if (hit.collider.CompareTag("Enemy"))
+                {
+                    hit.collider.SendMessage("OnScannedHit", bulletDamage / 10f * weaponCharge);
+                }
             }
+            for (float i = 2f; i > .2f; i -= 1.8f)
+            {
+                GameObject newBullet = Instantiate(hitscanPrefab, gunEmitter.position, playerModel.rotation);
+                ScanEffectScript script = newBullet.GetComponent<ScanEffectScript>();
+                newBullet.name = "HitscanVisual";
+                script.impulse = i;
+                script.lifetime = 1f;
+                script.charge = weaponCharge;
+            }
+            weaponCharge = 1;
+            railCD = 1f;
         }
-        for (float i = 2f; i > .2f; i -= 1.8f)
-        {
-            GameObject newBullet = Instantiate(hitscanPrefab, gunEmitter.position, playerModel.rotation);
-            ScanEffectScript script = newBullet.GetComponent<ScanEffectScript>();
-            newBullet.name = "HitscanVisual";
-            script.impulse = i;
-            script.lifetime = 1f;
-            script.charge = weaponCharge;
-        }
-        weaponCharge = 1;
-        
     }
     void OnAbilityUse()
     {
-        anim.SetTrigger("Spin");
-        Collider[] RangeHits = Physics.OverlapSphere(playerModel.position, meleeRadius);
-        Debug.Log(RangeHits.Length);
-        foreach (Collider c in RangeHits)
+        if (kickCD > 0)
         {
-            if (c.CompareTag("Enemy"))
+            anim.SetTrigger("Spin"); //ngl wish i knew about async when i hacked this one up
+            Collider[] RangeHits = Physics.OverlapSphere(playerModel.position, meleeRadius);
+            Debug.Log(RangeHits.Length);
+            foreach (Collider c in RangeHits)
             {
-                c.SendMessage("OnMeleeHit", kickDamage);
-                c.attachedRigidbody.AddForce((c.transform.position-transform.position )*5f, ForceMode.Impulse);
+                if (c.CompareTag("Enemy"))
+                {
+                    c.SendMessage("OnMeleeHit", kickDamage);
+                    c.attachedRigidbody.AddForce((c.transform.position - transform.position) * 5f, ForceMode.Impulse);
+                }
             }
+            kickCD = 1.5f;
         }
     }
     void OnGodToggle()
