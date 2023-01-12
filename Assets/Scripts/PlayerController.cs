@@ -10,7 +10,7 @@ public class PlayerController : MonoBehaviour
 {
     #region vars
     //CONSTS
-    private float meleeRadius = 1.3f;
+    private float meleeRadius = 2f;
     private float speedConst = 75f;
     private float fireDelay = 0.1f;
     private float sphereRadius = 0.005f;
@@ -191,7 +191,7 @@ public class PlayerController : MonoBehaviour
             if (c.CompareTag("Enemy"))
             {
                 c.SendMessage("OnMeleeHit", kickDamage);
-                //ADD KB YOU BUFFON
+                c.attachedRigidbody.AddForce((c.transform.position-transform.position )*5f, ForceMode.Impulse);
             }
         }
     }

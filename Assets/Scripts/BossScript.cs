@@ -7,6 +7,7 @@ public class BossScript : MonoBehaviour
 {
     public GameObject player;
     public GameObject bulletPrefab;
+    private bool bezerk=false;
     private float bezerkMult = 1f;
     private float maxHealth = 200f;
     private float health;
@@ -38,6 +39,16 @@ public class BossScript : MonoBehaviour
         {
             attackTimer -= Time.deltaTime*bezerkMult;
         }
+        if (!bezerk) { BezerkCheck(); }
+    }
+    void BezerkCheck()
+    {
+        if (health/maxHealth <= .25)
+        {
+            bezerk = true;
+            bezerkMult = 2;
+            nav.speed *= 2;
+        }
     }
     void PickAttack()
     {
@@ -61,9 +72,9 @@ public class BossScript : MonoBehaviour
             newBullet.transform.Rotate(Vector3.up, angle);
             EnemyBulletScript script = newBullet.GetComponent<EnemyBulletScript>();
             newBullet.name = "EnemyShot";
-            script.impulse = .1f;
+            script.impulse = .15f*bezerkMult;
             script.lifetime = 4f;
-            script.damage = 1f;
+            script.damage = 5f*bezerkMult;
             script.bulletParent = gameObject;
         }
     }
@@ -85,7 +96,7 @@ public class BossScript : MonoBehaviour
     {
         if (collision.collider.CompareTag("Player"))
         {
-            collision.collider.SendMessage("OnDamageTaken", 10f);
+            collision.collider.SendMessage("OnDamageTaken", 10f*bezerkMult);
         }
         if (collision.collider.CompareTag("Bullet"))
         {
