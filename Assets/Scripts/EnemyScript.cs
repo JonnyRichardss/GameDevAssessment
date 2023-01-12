@@ -124,7 +124,7 @@ public class EnemyScript : MonoBehaviour
         newBullet.name = "EnemyShot";
         script.impulse = .1f;
         script.lifetime = 4f;
-        script.damage = 1f;
+        script.damage = damage *(3f/4f);
         script.bulletParent = gameObject;
     }
     public void OnUpdateTarget(GameObject newTarget)
