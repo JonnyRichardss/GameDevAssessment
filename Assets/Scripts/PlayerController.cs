@@ -53,6 +53,9 @@ public class PlayerController : MonoBehaviour
     #region builtins
     void Start()
     {
+        Physics.IgnoreLayerCollision(9, 9);
+        Physics.IgnoreLayerCollision(8, 8);
+        Physics.IgnoreLayerCollision(8, 9);
         Physics.IgnoreLayerCollision(8, 10);
         GetOwnComponents();
         mainCamera.transform.LookAt(rb.transform);

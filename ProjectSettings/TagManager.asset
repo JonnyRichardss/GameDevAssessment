@@ -12,6 +12,7 @@ TagManager:
   - Powerup
   - Deadly
   - Trap
+  - Boss
   layers:
   - Default
   - TransparentFX

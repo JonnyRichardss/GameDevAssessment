@@ -8,8 +8,7 @@ public class EnemyScript : MonoBehaviour
     public enum EnemyType
     {
         Melee,
-        Ranged,
-        Boss
+        Ranged
     }
 
     public int lastTrap;
@@ -31,12 +30,13 @@ public class EnemyScript : MonoBehaviour
     void Start()
     {
         Physics.IgnoreLayerCollision(6, 9);
+        Physics.IgnoreLayerCollision(6, 7);
         soundPlayer = GetComponent<AudioSource>();
         health = 10f;
         nav = GetComponent<NavMeshAgent>();
         UpdateTarget(targetObject);
         anim = GetComponent<Animator>();
-        Physics.IgnoreLayerCollision(6, 7);
+        
     }
 
     // Update is called once per frame
@@ -107,9 +107,6 @@ public class EnemyScript : MonoBehaviour
                         return (true);
                     }
                     break;
-                case EnemyType.Boss:
-                    break;
-                    //actually might make a sep boss script as they will prob have mult attks
             }
             return (false);
         }
