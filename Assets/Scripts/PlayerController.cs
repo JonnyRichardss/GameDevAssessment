@@ -13,7 +13,7 @@ public class PlayerController : MonoBehaviour
     private float meleeRadius = 2f;
     private float speedConst = 75f;
     private float fireDelay = 0.1f;
-    private float sphereRadius = 0.005f;
+    private float sphereRadius = 0.02f;
     private float rayLength = 100.0f;
     private float baseBulletDamage = 2;
     private float baseKickDamage = 1;

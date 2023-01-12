@@ -1,15 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.AI;
 
 public class BossScript : MonoBehaviour
 {
     public GameObject player;
     public GameObject bulletPrefab;
+    public Slider bossBar;
     private bool bezerk=false;
     private float bezerkMult = 1f;
-    private float maxHealth = 200f;
+    private float maxHealth = 500f;
     private float health;
     private float attackTimer;
     private NavMeshAgent nav;
@@ -21,9 +23,16 @@ public class BossScript : MonoBehaviour
         health = maxHealth;
         Physics.IgnoreLayerCollision(6, 9);
         Physics.IgnoreLayerCollision(6, 7);
+        Image[] images = bossBar.GetComponentsInChildren<Image>();
+        foreach (Image image in images)
+        {
+            if (image.name == "Bar")
+            {
+                image.color = Color.magenta;
+            }
 
+        }
     }
-
     // Update is called once per frame
     void Update()
     {
@@ -40,6 +49,7 @@ public class BossScript : MonoBehaviour
             attackTimer -= Time.deltaTime*bezerkMult;
         }
         if (!bezerk) { BezerkCheck(); }
+        bossBar.value = health;
     }
     void BezerkCheck()
     {
@@ -100,6 +110,15 @@ public class BossScript : MonoBehaviour
         }
         if (collision.collider.CompareTag("Bullet"))
         {
+            health -= 2f;
+            if (health <= 0)
+            {
+                Destroy(gameObject);
+            }
         }
+    }
+    public void OnProjHit(float damage)
+    {
+
     }
 }

@@ -39,6 +39,12 @@ public class BulletScript : MonoBehaviour
             collision.collider.SendMessage("OnProjHit", damage);
             bulletParent.SendMessage("OnDealtDamage",damage);
             Destroy(gameObject);
+            return;
+        }
+        if (collision.collider.CompareTag("Boss")){
+            bulletParent.SendMessage("OnDealtDamage", damage);
+            Destroy(gameObject);
+
         }
             
     }

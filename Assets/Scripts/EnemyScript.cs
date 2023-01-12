@@ -150,12 +150,10 @@ public class EnemyScript : MonoBehaviour
     }
     void OnProjHit(float damage)
     {
-        Debug.Log("PROJ");
         OnDamageTaken(damage);
     }
     void OnMeleeHit(float damage)
     {
-        Debug.Log("Ow");
         OnDamageTaken(damage);
     }
     private void OnTriggerStay(Collider other)
@@ -165,7 +163,7 @@ public class EnemyScript : MonoBehaviour
             if (lastTrap != other.GetComponentInParent<SpikeTrapScript>().trapCounter && other.GetComponentInParent<SpikeTrapScript>().isDangerous)
             {
                 lastTrap = other.GetComponentInParent<SpikeTrapScript>().trapCounter;
-                OnDamageTaken(5f);
+                OnDamageTaken(10f);
             }
         }
     }
