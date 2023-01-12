@@ -48,9 +48,9 @@ public class PlayerController : MonoBehaviour
     private float kickCD;
     private float railCD;
     private bool firing;
-    private bool shotgun;
     private bool godMode = false;
 
+    public bool shotgun;
     public bool animating = false;
     public float health=100;
     public float weaponCharge = 1;
@@ -229,6 +229,10 @@ public class PlayerController : MonoBehaviour
                 {
                     c.SendMessage("OnMeleeHit", kickDamage);
                     c.attachedRigidbody.AddForce((c.transform.position - transform.position) * 5f, ForceMode.Impulse);
+                }
+                if (c.CompareTag("Shotgun"))
+                {
+                    c.SendMessage("OnMeleeHit",gameObject);
                 }
             }
             kickCD = 1.5f;
