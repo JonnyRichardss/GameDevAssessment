@@ -42,6 +42,10 @@ public class EnemyScript : MonoBehaviour
     void Update()
     {
         nav.SetDestination(targetTransform.position);
+        if (attackType == EnemyType.Ranged)
+        {
+            nav.stoppingDistance = 5f;
+        }
         TryAttack();
     }
     void SpawnPowerup()

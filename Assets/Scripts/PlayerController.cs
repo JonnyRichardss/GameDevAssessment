@@ -156,12 +156,12 @@ public class PlayerController : MonoBehaviour
     {
         Ray hitscan = new Ray(playerModel.position,  gunEmitter.position-playerModel.position);
         Debug.DrawRay(hitscan.origin, hitscan.direction*100f, Color.red, 1f);
-        
-        if (Physics.SphereCast(hitscan,sphereRadius * weaponCharge, out RaycastHit hit, rayLength))
+
+        foreach (RaycastHit hit in Physics.SphereCastAll(hitscan, sphereRadius * weaponCharge, rayLength))
         {
             if (hit.collider.CompareTag("Enemy"))
             {
-                hit.collider.SendMessage("OnScannedHit", bulletDamage/10f * weaponCharge);
+                hit.collider.SendMessage("OnScannedHit", bulletDamage / 10f * weaponCharge);
             }
         }
         for (float i = 2f; i > .2f; i -= 1.8f)
