@@ -42,17 +42,14 @@ public class PlayerController : MonoBehaviour
     private float chargePowerTimer=0;
     private float damagePowerTimer=0;
     private float lastFire = 0;
-    private bool animating;
     private bool firing;
     private bool godMode = false;
 
+    public bool animating = false;
     public float health=100;
     public float weaponCharge = 1;
     #endregion
-    void Awake()
-    {
-
-    }
+    #region builtins
     void Start()
     {
         GetOwnComponents();
@@ -87,12 +84,14 @@ public class PlayerController : MonoBehaviour
 
         
     }
+    #endregion
     void RespawnPlayer(float missingHealth)
     {
         PlayerSpawnPoint spawnPoint = GetComponentInParent<PlayerSpawnPoint>();
         spawnPoint.SpawnPlayer(health-missingHealth, weaponCharge);
         Destroy(gameObject);
     }
+    #region methods
     void AutoFire()
     {
         if (Time.time - lastFire >= fireDelay)
@@ -132,6 +131,7 @@ public class PlayerController : MonoBehaviour
             kickDamage = baseKickDamage;
         }
     }
+    #endregion
     #region inputs
     void OnMove(InputValue movementValue)
     {
@@ -208,8 +208,7 @@ public class PlayerController : MonoBehaviour
     
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.collider.CompareTag("Powerup")) { RespawnPlayer(10f);return; }
-            if (collision.collider.CompareTag("Powerup"))
+       if (collision.collider.CompareTag("Powerup"))
         {
             PowerupScript script = collision.collider.GetComponent<PowerupScript>();
             switch (script.type)
@@ -224,6 +223,10 @@ public class PlayerController : MonoBehaviour
                     damagePowerTimer = 10f;
                     break;
             }
+        }
+       if (collision.collider.CompareTag("Deadly"))
+        {
+            RespawnPlayer(10f);
         }
     }
     void OnDealtDamage(float damage)
