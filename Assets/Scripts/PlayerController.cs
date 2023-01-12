@@ -8,62 +8,63 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
+    #region vars
+    //CONSTS
     private float meleeRadius = 1.3f;
+    private float speedConst = 75f;
+    private float fireDelay = 0.1f;
+    private float sphereRadius = 0.005f;
+    private float rayLength = 100.0f;
+    private float baseBulletDamage = 2;
+    private float baseKickDamage = 1;
+    private float maxHealth = 100;
 
+    //Own components
     private Rigidbody rb;
     private Animator anim;
-    private float movementX, movementY;
-    private float mouseX, mouseY;
-    private bool firing;
-    private float lastFire = 0;
-    private float weaponCharge = 1;
-    private bool godMode = false;
-    private float health;
+    private Camera mainCamera;
+    private Transform lookTarget;
+    private Transform playerModel;
+    private Transform gunEmitter;
 
-    public bool animating;
-    public float speedConst = 0;
-    public float fireDelay = 0;
-    private float sphereRadius = 0.005f;
-    public float rayLength = 100.0f;
-    public float baseBulletDamage;
-    public float baseKickDamage;
-    public Camera mainCamera;
-    public GameObject lookTarget;
-    public GameObject playerModel;
-    public GameObject gunEmitter;
+    //Outside instanced
     public GameObject bulletPrefab;
     public GameObject hitscanPrefab;
     public Slider healthBar;
     public Slider chargeBar;
-    public float maxHealth;
 
-    private float healthPowerTimer;
-    private float chargePowerTimer;
-    private float damagePowerTimer;
+    //Dynamic vars
+    private float movementX, movementY;
+    private float mouseX, mouseY;
     private float bulletDamage;
     private float kickDamage;
+    private float healthPowerTimer=0;
+    private float chargePowerTimer=0;
+    private float damagePowerTimer=0;
+    private float lastFire = 0;
+    private bool animating;
+    private bool firing;
+    private bool godMode = false;
 
-    public float hitspeed;
+    public float health=100;
+    public float weaponCharge = 1;
+    #endregion
+    void Awake()
+    {
+
+    }
     void Start()
     {
+        GetOwnComponents();
+        mainCamera.transform.LookAt(rb.transform);
         bulletDamage = baseBulletDamage;
         kickDamage = baseKickDamage;
-        healthBar.SendMessage("OnSetColour", Color.red);
-        chargeBar.SendMessage("OnSetColour", Color.yellow);
-        rb = GetComponent<Rigidbody>();
-        mainCamera.transform.LookAt(rb.transform);
-        anim = GetComponent<Animator>();
-        health = maxHealth;
+        UpdateBars();
     }
     void FixedUpdate()
     {
         Vector3 movement = new Vector3(movementX, 0.0f, movementY);
-
-
         rb.AddForce(movement * speedConst);
-
-        
-        
     }
 
     void Update()
@@ -71,9 +72,9 @@ public class PlayerController : MonoBehaviour
         if (!animating)
         {
         Vector3 mouse = new Vector3(mouseX, 0.0f, mouseY);
-        lookTarget.transform.localPosition = mouse;
+        lookTarget.localPosition = mouse;
         }
-        playerModel.transform.LookAt(lookTarget.transform);
+        playerModel.LookAt(lookTarget);
 
         if (firing)
         {
@@ -81,145 +82,35 @@ public class PlayerController : MonoBehaviour
            
         }
 
-        healthBar.SendMessage("OnUpdateValue",health);
-        chargeBar.SendMessage("OnUpdateValue", weaponCharge);
+        UpdateBars();
         ApplyPowerups();
 
         
+    }
+    void RespawnPlayer(float missingHealth)
+    {
+        PlayerSpawnPoint spawnPoint = GetComponentInParent<PlayerSpawnPoint>();
+        spawnPoint.SpawnPlayer(health-missingHealth, weaponCharge);
+        Destroy(gameObject);
     }
     void AutoFire()
     {
         if (Time.time - lastFire >= fireDelay)
         {
             lastFire = Time.time;
-            GameObject newBullet = Instantiate(bulletPrefab, gunEmitter.transform.position, playerModel.transform.rotation);
+            GameObject newBullet = Instantiate(bulletPrefab, gunEmitter.position, playerModel.rotation);
             BulletScript script = newBullet.GetComponent<BulletScript>();
             newBullet.name = "PlayerShot";
             script.impulse = .5f;
             script.lifetime = 2f;
             script.damage = bulletDamage;
             script.bulletParent = gameObject;
-            
-        }
-    }
-    void OnMove(InputValue movementValue)
-    {
-        Vector2 movementVector = movementValue.Get<Vector2>();
-        movementX = movementVector.x;
-        movementY = movementVector.y;
-    }
-    void OnMousePos(InputValue mouseIn)
-    {
-        Vector2 mousePos = mouseIn.Get<Vector2>() - new Vector2(Screen.width / 2, Screen.height / 2);
-        mousePos = mousePos.normalized;
-        mouseX = mousePos.x;
-        mouseY = mousePos.y;
-    }
-
-    void OnPrimaryFire(InputValue value)
-    {
-        firing = value.isPressed;
-    }
-    void OnSecondaryFire()
-    {
-        Ray hitscan = new Ray(playerModel.transform.position,  gunEmitter.transform.position-playerModel.transform.position);
-        Debug.DrawRay(hitscan.origin, hitscan.direction*100f, Color.red, 1f);
-        
-        if (Physics.SphereCast(hitscan,sphereRadius * weaponCharge, out RaycastHit hit, rayLength))
-        {
-            if (hit.collider.CompareTag("Enemy"))
-            {
-                hit.collider.SendMessage("OnScannedHit", bulletDamage/10f * weaponCharge);
-            }
-        }
-        for (float i = 2f; i > .2f; i -= 1.8f)
-        {
-            GameObject newBullet = Instantiate(hitscanPrefab, gunEmitter.transform.position, playerModel.transform.rotation);
-            ScanEffectScript script = newBullet.GetComponent<ScanEffectScript>();
-            newBullet.name = "HitscanVisual";
-            script.impulse = i;
-            script.lifetime = 1f;
-            script.charge = weaponCharge;
-        }
-        weaponCharge = 1;
-        chargeBar.SendMessage("OnSetColour", Color.yellow);
-        
-    }
-    void ClampValues()
-    {
-        if (health >= maxHealth) {health = maxHealth;}
-        if (weaponCharge >= 100f) {weaponCharge = 100f;}
-    }
-    void AddCharge(float charge)
-    { 
-        weaponCharge += charge;
-        if (weaponCharge >= 100f)
-        {
-            weaponCharge = 100f;
-            chargeBar.SendMessage("OnSetColour", Color.green);
-        }
-    }
-    void OnAbilityUse()
-    {
-        anim.SetTrigger("Spin");
-        Collider[] RangeHits = Physics.OverlapSphere(playerModel.transform.position, meleeRadius);
-        Debug.Log(RangeHits.Length);
-       foreach (Collider c in RangeHits )
-        {
-            if (c.CompareTag("Enemy"))
-            {
-                c.SendMessage("OnMeleeHit",kickDamage);
-                AddCharge(kickDamage);
-                //ADD KB YOU BUFFON
-            }
-        }
-    }
-    void OnDamageTaken(float damage)
-    {
-        if (godMode) {return;}
-        health -= damage;
-        if (health <= 0.0f)
-        {
-            Destroy(gameObject);
-        }
-    }
-    void OnGodToggle()
-    {
-        if (godMode)
-        {
-            godMode = false;
-            healthBar.SendMessage("OnSetColour",Color.red);
-        }
-        else 
-        {
-            godMode = true;
-            healthBar.SendMessage("OnSetColour", Color.cyan);
 
         }
     }
-    private void OnCollisionEnter(Collision collision)
+    void ApplyPowerups()
     {
-        if (collision.collider.CompareTag("Powerup"))
-        {
-            PowerupScript script = collision.collider.GetComponent<PowerupScript>();
-            switch (script.type)
-            {
-                case PowerupScript.PowerUpType.Health:
-                    healthPowerTimer = 10f;
-                    break;
-                case PowerupScript.PowerUpType.Charge:
-                    chargePowerTimer = 10f;
-                    break;
-                case PowerupScript.PowerUpType.Damage:
-                    damagePowerTimer = 10f;
-                    break;
-            }
-        }
-    }
-    private void ApplyPowerups()
-    {
-        Debug.Log(healthPowerTimer + ","+chargePowerTimer + "," + damagePowerTimer);
-        if(healthPowerTimer >= 0)
+        if (healthPowerTimer >= 0)
         {
             healthPowerTimer -= Time.deltaTime;
             health += Time.deltaTime * 4f;
@@ -241,15 +132,142 @@ public class PlayerController : MonoBehaviour
             kickDamage = baseKickDamage;
         }
     }
-    void OnDrawGizmos()
+    #region inputs
+    void OnMove(InputValue movementValue)
     {
-        Gizmos.color = Color.green;
-        Gizmos.DrawWireSphere(playerModel.transform.position, meleeRadius);
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawSphere(lookTarget.transform.position, 0.1f);
+        Vector2 movementVector = movementValue.Get<Vector2>();
+        movementX = movementVector.x;
+        movementY = movementVector.y;
+    }
+    void OnMousePos(InputValue mouseIn)
+    {
+        Vector2 mousePos = mouseIn.Get<Vector2>() - new Vector2(Screen.width / 2, Screen.height / 2);
+        mousePos = mousePos.normalized;
+        mouseX = mousePos.x;
+        mouseY = mousePos.y;
+    }
+
+    void OnPrimaryFire(InputValue value)
+    {
+        firing = value.isPressed;
+    }
+    void OnSecondaryFire()
+    {
+        Ray hitscan = new Ray(playerModel.position,  gunEmitter.position-playerModel.position);
+        Debug.DrawRay(hitscan.origin, hitscan.direction*100f, Color.red, 1f);
+        
+        if (Physics.SphereCast(hitscan,sphereRadius * weaponCharge, out RaycastHit hit, rayLength))
+        {
+            if (hit.collider.CompareTag("Enemy"))
+            {
+                hit.collider.SendMessage("OnScannedHit", bulletDamage/10f * weaponCharge);
+            }
+        }
+        for (float i = 2f; i > .2f; i -= 1.8f)
+        {
+            GameObject newBullet = Instantiate(hitscanPrefab, gunEmitter.position, playerModel.rotation);
+            ScanEffectScript script = newBullet.GetComponent<ScanEffectScript>();
+            newBullet.name = "HitscanVisual";
+            script.impulse = i;
+            script.lifetime = 1f;
+            script.charge = weaponCharge;
+        }
+        weaponCharge = 1;
+        
+    }
+    void OnAbilityUse()
+    {
+        anim.SetTrigger("Spin");
+        Collider[] RangeHits = Physics.OverlapSphere(playerModel.position, meleeRadius);
+        Debug.Log(RangeHits.Length);
+        foreach (Collider c in RangeHits)
+        {
+            if (c.CompareTag("Enemy"))
+            {
+                c.SendMessage("OnMeleeHit", kickDamage);
+                //ADD KB YOU BUFFON
+            }
+        }
+    }
+    void OnGodToggle()
+    {
+        godMode = !godMode;
+    }
+    #endregion
+    
+    #region messages  
+    void OnDamageTaken(float damage)
+    {
+        if (godMode) {return;}
+        health -= damage;
+        if (health <= 0.0f)
+        {
+            RespawnPlayer(-100f);
+        }
+    }
+    
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.collider.CompareTag("Powerup")) { RespawnPlayer(10f);return; }
+            if (collision.collider.CompareTag("Powerup"))
+        {
+            PowerupScript script = collision.collider.GetComponent<PowerupScript>();
+            switch (script.type)
+            {
+                case PowerupScript.PowerUpType.Health:
+                    healthPowerTimer = 10f;
+                    break;
+                case PowerupScript.PowerUpType.Charge:
+                    chargePowerTimer = 10f;
+                    break;
+                case PowerupScript.PowerUpType.Damage:
+                    damagePowerTimer = 10f;
+                    break;
+            }
+        }
     }
     void OnDealtDamage(float damage)
     {
-        AddCharge(damage);
+        weaponCharge += damage;
     }
-}
+    #endregion
+    #region helpers
+    void GetOwnComponents()
+    {
+        rb = GetComponent<Rigidbody>();
+        anim = GetComponent<Animator>();
+        mainCamera = GetComponentInChildren<Camera>();
+        for (int i = 0; i < gameObject.transform.childCount; i++)
+        {
+            Transform child = gameObject.transform.GetChild(i);
+            switch (child.name)
+            {
+                case "LookTarget":
+                    lookTarget = child;
+                    break;
+                case "PlayerModel":
+                    playerModel = child;
+                    gunEmitter = child.GetChild(0);
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+    void UpdateBars()
+    {
+        Color healthColour;
+        Color chargeColour;
+
+        if (health >= maxHealth) {health = maxHealth;}
+        if (weaponCharge >= 100f) {weaponCharge = 100f; chargeColour = Color.green;} else {chargeColour = Color.yellow;}
+        if (godMode) {healthColour = Color.cyan;} else{healthColour = Color.red;}
+
+        healthBar.SendMessage("OnUpdateValue", health);
+        chargeBar.SendMessage("OnUpdateValue", weaponCharge);
+        healthBar.SendMessage("OnSetColour", healthColour);
+        chargeBar.SendMessage("OnSetColour", chargeColour);
+
+    }
+    #endregion
+    }
