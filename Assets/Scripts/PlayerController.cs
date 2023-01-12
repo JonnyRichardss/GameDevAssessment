@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.VFX;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
@@ -195,7 +196,7 @@ public class PlayerController : MonoBehaviour
 
             foreach (RaycastHit hit in Physics.SphereCastAll(hitscan, sphereRadius * VariableHolder.playerCharge, rayLength))
             {
-                if (hit.collider.CompareTag("Enemy"))
+                if (hit.collider.CompareTag("Enemy")||hit.collider.CompareTag("Boss"))
                 {
                     VariableHolder.playerScore += 10;
                     hit.collider.SendMessage("OnScannedHit", bulletDamage / 10f * VariableHolder.playerCharge);
@@ -250,7 +251,7 @@ public class PlayerController : MonoBehaviour
         VariableHolder.playerHealth -= damage;
         if (VariableHolder.playerHealth <= 0.0f)
         {
-            RespawnPlayer(-100f);
+            SceneManager.LoadScene("TitleScreen");
         }
     }
     

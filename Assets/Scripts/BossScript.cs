@@ -3,12 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.AI;
-
+using TMPro;
+using UnityEngine.SceneManagement;
 public class BossScript : MonoBehaviour
 {
     public GameObject player;
     public GameObject bulletPrefab;
     public Slider bossBar;
+    public TextMeshProUGUI text;
+    public TextMeshProUGUI winText;
     private bool bezerk=false;
     private float bezerkMult = 1f;
     private float maxHealth = 500f;
@@ -19,6 +22,7 @@ public class BossScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        winText.text = "";
         nav = GetComponent<NavMeshAgent>();
         health = maxHealth;
         Physics.IgnoreLayerCollision(6, 9);
@@ -36,6 +40,7 @@ public class BossScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        VariableHolder.bossTimer += Time.deltaTime;
         nav.SetDestination(player.transform.position);
         transform.LookAt(player.transform);
         transform.GetChild(0).LookAt(player.transform);
@@ -48,8 +53,17 @@ public class BossScript : MonoBehaviour
         {
             attackTimer -= Time.deltaTime*bezerkMult;
         }
-        if (!bezerk) { BezerkCheck(); }
+        if (!bezerk) 
+        { 
+            BezerkCheck();
+            text.text = string.Format("Score: {0}\nBoss Time: {1}", VariableHolder.playerScore, VariableHolder.bossTimer);
+        }
+        else
+        {
+            text.text = string.Format("Score: {0}\nBoss Time: {1}\n BOSS IS GOING BEZERK!!", VariableHolder.playerScore, VariableHolder.bossTimer);
+        }
         bossBar.value = health;
+        
     }
     void BezerkCheck()
     {
@@ -111,14 +125,29 @@ public class BossScript : MonoBehaviour
         if (collision.collider.CompareTag("Bullet"))
         {
             health -= 2f;
-            if (health <= 0)
-            {
-                Destroy(gameObject);
-            }
+
         }
     }
-    public void OnProjHit(float damage)
+    private void RemoveHealth(float damage)
     {
-
+        health -= damage;
+        VariableHolder.playerScore += damage;
+        if (health <= 0)
+        {
+            bezerkMult = 0;
+            winText.text = "You Win!!!";
+            StartCoroutine(TitleAfterFive());
+            VariableHolder.bossBeaten = true;
+            VariableHolder.bossTimer -= 5;
+        }
+    }
+    IEnumerator TitleAfterFive()
+    {
+        yield return new WaitForSeconds(5f);
+        SceneManager.LoadScene("TitleScreen");
+    }
+    public void OnScannedHit(float damage)
+    {
+        RemoveHealth(damage);
     }
 }

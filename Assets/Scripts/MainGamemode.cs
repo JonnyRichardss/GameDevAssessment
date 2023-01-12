@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class MainGamemode : MonoBehaviour
 {
@@ -21,7 +22,7 @@ public class MainGamemode : MonoBehaviour
         UItext.text = string.Format("Score: {0}\nTime Left: {1}", VariableHolder.playerScore, modeTimer);
         if (modeTimer <= 0)
         {
-            //next scene
+            SceneManager.LoadScene("BossCutscene");
         }
     }
 }
