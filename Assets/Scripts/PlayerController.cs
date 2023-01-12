@@ -45,6 +45,7 @@ public class PlayerController : MonoBehaviour
     private float kickCD;
     private float railCD;
     private bool firing;
+    private bool shotgun;
     private bool godMode = false;
 
     public bool animating = false;
@@ -103,17 +104,39 @@ public class PlayerController : MonoBehaviour
     }
     void AutoFire()
     {
-        if (Time.time - lastFire >= fireDelay)
+        if (!shotgun)
         {
-            lastFire = Time.time;
-            GameObject newBullet = Instantiate(bulletPrefab, gunEmitter.position, playerModel.rotation);
-            BulletScript script = newBullet.GetComponent<BulletScript>();
-            newBullet.name = "PlayerShot";
-            script.impulse = .5f;
-            script.lifetime = 2f;
-            script.damage = bulletDamage;
-            script.bulletParent = gameObject;
+            if (Time.time - lastFire >= fireDelay)
+            {
+                lastFire = Time.time;
+                GameObject newBullet = Instantiate(bulletPrefab, gunEmitter.position, playerModel.rotation);
+                BulletScript script = newBullet.GetComponent<BulletScript>();
+                newBullet.name = "PlayerShot";
+                script.impulse = .5f;
+                script.lifetime = 2f;
+                script.damage = bulletDamage;
+                script.bulletParent = gameObject;
 
+            }
+        }
+        else
+        {
+            if (Time.time - lastFire >= 1f)
+            {
+                lastFire = Time.time;
+                for (float angle = -90f * (1f / 4f); angle <= 90f * (1f / 4f); angle += 90f / 8f)
+                {
+                    GameObject newBullet = Instantiate(bulletPrefab, gunEmitter.position, playerModel.rotation);
+                    newBullet.transform.Rotate(Vector3.up, angle);
+                    BulletScript script = newBullet.GetComponent<BulletScript>();
+                    newBullet.name = "PlayerShot";
+                    script.impulse = .5f;
+                    script.lifetime = 2f;
+                    script.damage = bulletDamage;
+                    script.bulletParent = gameObject;
+                }
+
+            }
         }
     }
     void ApplyPowerups()
@@ -162,7 +185,7 @@ public class PlayerController : MonoBehaviour
     }
     void OnSecondaryFire()
     {
-        if (railCD > 0)
+        if (railCD <= 0)
         {
             Ray hitscan = new Ray(playerModel.position, gunEmitter.position - playerModel.position);
             Debug.DrawRay(hitscan.origin, hitscan.direction * 100f, Color.red, 1f);
@@ -189,7 +212,7 @@ public class PlayerController : MonoBehaviour
     }
     void OnAbilityUse()
     {
-        if (kickCD > 0)
+        if (kickCD <= 0)
         {
             anim.SetTrigger("Spin"); //ngl wish i knew about async when i hacked this one up
             Collider[] RangeHits = Physics.OverlapSphere(playerModel.position, meleeRadius);
