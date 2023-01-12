@@ -48,12 +48,8 @@ public class PlayerController : MonoBehaviour
     private float kickCD;
     private float railCD;
     private bool firing;
-    private bool godMode = false;
 
-    public bool shotgun;
     public bool animating = false;
-    public float health=100;
-    public float weaponCharge = 1;
     public int lastTrap;
     #endregion
     #region builtins
@@ -102,12 +98,13 @@ public class PlayerController : MonoBehaviour
     void RespawnPlayer(float missingHealth)
     {
         PlayerSpawnPoint spawnPoint = GetComponentInParent<PlayerSpawnPoint>();
-        spawnPoint.SpawnPlayer(health - missingHealth, weaponCharge);
+        spawnPoint.SpawnPlayer();
+        VariableHolder.playerHealth -= missingHealth;
         Destroy(gameObject);
     }
     void AutoFire()
     {
-        if (!shotgun)
+        if (!VariableHolder.shotgun)
         {
             if (Time.time - lastFire >= fireDelay)
             {
@@ -147,13 +144,13 @@ public class PlayerController : MonoBehaviour
         if (healthPowerTimer >= 0)
         {
             healthPowerTimer -= Time.deltaTime;
-            health += Time.deltaTime * 4f;
+            VariableHolder.playerHealth += Time.deltaTime * 4f;
             healthIcon.fillAmount = healthPowerTimer/10f;
         }
         if (chargePowerTimer >= 0)
         {
             chargePowerTimer -= Time.deltaTime;
-            weaponCharge += Time.deltaTime * 4f;
+            VariableHolder.playerCharge += Time.deltaTime * 4f;
             chargeIcon.fillAmount = chargePowerTimer / 10f;
         }
         if (damagePowerTimer >= 0)
@@ -196,11 +193,12 @@ public class PlayerController : MonoBehaviour
             Ray hitscan = new Ray(playerModel.position, gunEmitter.position - playerModel.position);
             Debug.DrawRay(hitscan.origin, hitscan.direction * 100f, Color.red, 1f);
 
-            foreach (RaycastHit hit in Physics.SphereCastAll(hitscan, sphereRadius * weaponCharge, rayLength))
+            foreach (RaycastHit hit in Physics.SphereCastAll(hitscan, sphereRadius * VariableHolder.playerCharge, rayLength))
             {
                 if (hit.collider.CompareTag("Enemy"))
                 {
-                    hit.collider.SendMessage("OnScannedHit", bulletDamage / 10f * weaponCharge);
+                    VariableHolder.playerScore += 10;
+                    hit.collider.SendMessage("OnScannedHit", bulletDamage / 10f * VariableHolder.playerCharge);
                 }
             }
             for (float i = 2f; i > .2f; i -= 1.8f)
@@ -210,9 +208,9 @@ public class PlayerController : MonoBehaviour
                 newBullet.name = "HitscanVisual";
                 script.impulse = i;
                 script.lifetime = 1f;
-                script.charge = weaponCharge;
+                script.charge = VariableHolder.playerCharge;
             }
-            weaponCharge = 1;
+            VariableHolder.playerCharge = 1;
             railCD = 1f;
         }
     }
@@ -228,11 +226,12 @@ public class PlayerController : MonoBehaviour
                 if (c.CompareTag("Enemy"))
                 {
                     c.SendMessage("OnMeleeHit", kickDamage);
+                    VariableHolder.playerScore += 10;
                     c.attachedRigidbody.AddForce((c.transform.position - transform.position) * 5f, ForceMode.Impulse);
                 }
                 if (c.CompareTag("Shotgun"))
                 {
-                    c.SendMessage("OnMeleeHit",gameObject);
+                    VariableHolder.shotgun = true;
                 }
             }
             kickCD = 1.5f;
@@ -240,16 +239,16 @@ public class PlayerController : MonoBehaviour
     }
     void OnGodToggle()
     {
-        godMode = !godMode;
+        VariableHolder.godMode = !VariableHolder.godMode;
     }
     #endregion
     
     #region messages  
     void OnDamageTaken(float damage)
     {
-        if (godMode) {return;}
-        health -= damage;
-        if (health <= 0.0f)
+        if (VariableHolder.godMode) {return;}
+        VariableHolder.playerHealth -= damage;
+        if (VariableHolder.playerHealth <= 0.0f)
         {
             RespawnPlayer(-100f);
         }
@@ -264,12 +263,15 @@ public class PlayerController : MonoBehaviour
             {
                 case PowerupScript.PowerUpType.Health:
                     healthPowerTimer = 10f;
+                    VariableHolder.playerScore += 20;
                     break;
                 case PowerupScript.PowerUpType.Charge:
                     chargePowerTimer = 10f;
+                    VariableHolder.playerScore += 20;
                     break;
                 case PowerupScript.PowerUpType.Damage:
                     damagePowerTimer = 10f;
+                    VariableHolder.playerScore += 20;
                     break;
             }
         }
@@ -291,7 +293,8 @@ public class PlayerController : MonoBehaviour
     }
     void OnDealtDamage(float damage)
     {
-        weaponCharge += damage;
+        VariableHolder.playerCharge += damage;
+        VariableHolder.playerScore += damage;
     }
     #endregion
     #region helpers
@@ -322,12 +325,12 @@ public class PlayerController : MonoBehaviour
         Color healthColour;
         Color chargeColour;
 
-        if (health >= maxHealth) {health = maxHealth;}
-        if (weaponCharge >= 100f) {weaponCharge = 100f; chargeColour = Color.green;} else {chargeColour = Color.yellow;}
-        if (godMode) {healthColour = Color.cyan;} else{healthColour = Color.red;}
+        if (VariableHolder.playerHealth >= maxHealth) { VariableHolder.playerHealth = maxHealth;}
+        if (VariableHolder.playerCharge >= 100f) { VariableHolder.playerCharge = 100f; chargeColour = Color.green;} else {chargeColour = Color.yellow;}
+        if (VariableHolder.godMode) {healthColour = Color.cyan;} else{healthColour = Color.red;}
 
-        healthBar.SendMessage("OnUpdateValue", health);
-        chargeBar.SendMessage("OnUpdateValue", weaponCharge);
+        healthBar.SendMessage("OnUpdateValue", VariableHolder.playerHealth);
+        chargeBar.SendMessage("OnUpdateValue", VariableHolder.playerCharge);
         healthBar.SendMessage("OnSetColour", healthColour);
         chargeBar.SendMessage("OnSetColour", chargeColour);
 

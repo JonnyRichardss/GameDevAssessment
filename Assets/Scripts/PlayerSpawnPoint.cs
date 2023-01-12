@@ -23,16 +23,14 @@ public class PlayerSpawnPoint : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        SpawnPlayer(100f,1f);
+        SpawnPlayer();
     }
-    public void SpawnPlayer(float health,float charge)
+    public void SpawnPlayer()
     {
         player = Instantiate(playerPrefab, gameObject.transform);
         newScript = player.GetComponent<PlayerController>();
         newScript.healthBar = healthBar;
         newScript.chargeBar = chargeBar;
-        newScript.health = health;
-        newScript.weaponCharge = charge;
         newScript.bulletPrefab = bulletPrefab;
         newScript.hitscanPrefab = hitscanPrefab;
         newScript.healthIcon = healthIcon;
