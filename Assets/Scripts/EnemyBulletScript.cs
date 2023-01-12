@@ -1,10 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.VFX;
-using UnityEngine.InputSystem.HID;
 
-public class BulletScript : MonoBehaviour
+public class EnemyBulletScript : MonoBehaviour
 {
     public float impulse;
     public float lifetime;
@@ -15,7 +13,7 @@ public class BulletScript : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody>();
-        rb.AddForce(impulse*transform.forward,ForceMode.Impulse);
+        rb.AddForce(impulse * transform.forward, ForceMode.Impulse);
     }
 
     // Update is called once per frame
@@ -34,12 +32,11 @@ public class BulletScript : MonoBehaviour
             Destroy(gameObject);
             return;
         }
-        if (collision.collider.CompareTag("Enemy"))
+        if (collision.collider.CompareTag("Player"))
         {
-            collision.collider.SendMessage("OnProjHit", damage);
-            bulletParent.SendMessage("OnDealtDamage",damage);
+            collision.collider.SendMessage("OnDamageTaken", damage);
             Destroy(gameObject);
         }
-            
+
     }
 }

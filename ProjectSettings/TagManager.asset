@@ -21,9 +21,9 @@ TagManager:
   - UI
   - Enemy
   - Powerup
-  - Bullet
-  - 
-  - 
+  - PlayerBullet
+  - EnemyBullet
+  - Player
   - 
   - 
   - 

@@ -18,8 +18,8 @@ public class EnemyScript : MonoBehaviour
     public GameObject targetObject;
     public Transform targetTransform;
     public EnemyType attackType;
-    public GameObject PowerupPrefab;
-
+    public GameObject powerupPrefab;
+    public GameObject bulletPrefab;
 
 
     private AudioSource soundPlayer;
@@ -30,6 +30,7 @@ public class EnemyScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        Physics.IgnoreLayerCollision(6, 9);
         soundPlayer = GetComponent<AudioSource>();
         health = 10f;
         nav = GetComponent<NavMeshAgent>();
@@ -44,7 +45,7 @@ public class EnemyScript : MonoBehaviour
         nav.SetDestination(targetTransform.position);
         if (attackType == EnemyType.Ranged)
         {
-            nav.stoppingDistance = 5f;
+            nav.stoppingDistance = 7f;
         }
         TryAttack();
     }
@@ -56,7 +57,7 @@ public class EnemyScript : MonoBehaviour
             float rand2 = Random.Range(.1f,.2f);
             if (Random.value > 0.5) { rand1 = 0 - rand1; }
             if (Random.value > 0.5) { rand2 = 0 - rand1; }
-            GameObject powerup = Instantiate(PowerupPrefab,transform.position+(new Vector3(0f,1f,0f)),transform.rotation);
+            GameObject powerup = Instantiate(powerupPrefab,transform.position+(new Vector3(0f,1f,0f)),transform.rotation);
             PowerupScript script = powerup.GetComponent<PowerupScript>();
             Rigidbody rb = powerup.GetComponent<Rigidbody>();
             Vector3 escapeVector = Vector3.Lerp(Vector3.up, Vector3.right, rand1);
@@ -99,6 +100,12 @@ public class EnemyScript : MonoBehaviour
                     }
                     break;
                 case EnemyType.Ranged:
+                    if ((transform.position - targetTransform.position).magnitude < 8f)
+                    {
+                        FireBullet();
+                        attackCD = 1f;
+                        return (true);
+                    }
                     break;
                 case EnemyType.Boss:
                     break;
@@ -111,6 +118,16 @@ public class EnemyScript : MonoBehaviour
             attackCD -= Time.deltaTime;
             return (false);
         }
+    }
+    void FireBullet()
+    {
+        GameObject newBullet = Instantiate(bulletPrefab, transform.position, transform.rotation);
+        EnemyBulletScript script = newBullet.GetComponent<EnemyBulletScript>();
+        newBullet.name = "EnemyShot";
+        script.impulse = .1f;
+        script.lifetime = 4f;
+        script.damage = 1f;
+        script.bulletParent = gameObject;
     }
     void UpdateTarget(GameObject newTarget)
     {

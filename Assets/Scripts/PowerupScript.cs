@@ -41,6 +41,7 @@ public class PowerupScript : MonoBehaviour
         vfx.SetVector4("Color", (Vector4)MakeHDRColour(colour, 6f));
         Physics.IgnoreLayerCollision(6, 7);
         Physics.IgnoreLayerCollision(7, 8);
+        Physics.IgnoreLayerCollision(7, 9);
     }
 
     // Update is called once per frame

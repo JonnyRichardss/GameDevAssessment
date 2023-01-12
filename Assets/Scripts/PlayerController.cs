@@ -53,6 +53,7 @@ public class PlayerController : MonoBehaviour
     #region builtins
     void Start()
     {
+        Physics.IgnoreLayerCollision(8, 10);
         GetOwnComponents();
         mainCamera.transform.LookAt(rb.transform);
         bulletDamage = baseBulletDamage;
@@ -86,13 +87,14 @@ public class PlayerController : MonoBehaviour
         
     }
     #endregion
+
+    #region methods
     void RespawnPlayer(float missingHealth)
     {
         PlayerSpawnPoint spawnPoint = GetComponentInParent<PlayerSpawnPoint>();
-        spawnPoint.SpawnPlayer(health-missingHealth, weaponCharge);
+        spawnPoint.SpawnPlayer(health - missingHealth, weaponCharge);
         Destroy(gameObject);
     }
-    #region methods
     void AutoFire()
     {
         if (Time.time - lastFire >= fireDelay)

@@ -1308,7 +1308,7 @@ GameObject:
   - component: {fileID: 4291248219901528881}
   - component: {fileID: 2424080734662730259}
   - component: {fileID: 4653327420093581217}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -1349,8 +1349,10 @@ MonoBehaviour:
   hitscanPrefab: {fileID: 5339207906737198162, guid: 9d1767a445d15dd409f828ab7c0aa2b1, type: 3}
   healthBar: {fileID: 0}
   chargeBar: {fileID: 0}
+  animating: 0
   health: 100
   weaponCharge: 1
+  lastTrap: 0
 --- !u!114 &1098007390315337948
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -262,7 +262,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 69b28f126fc0f9249877cad670382443, type: 2}
+  - {fileID: 2100000, guid: 02d77f7ea36e50e49b799871b925af12, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -522,7 +522,8 @@ MonoBehaviour:
   targetObject: {fileID: 0}
   targetTransform: {fileID: 0}
   attackType: 1
-  PowerupPrefab: {fileID: 4227013873459334817, guid: 853cd30fcc102524aa07d054fb926c25, type: 3}
+  powerupPrefab: {fileID: 4227013873459334817, guid: 853cd30fcc102524aa07d054fb926c25, type: 3}
+  bulletPrefab: {fileID: 5339207906737198162, guid: 577278fefc4d3b04db3e9ced4e90165d, type: 3}
 --- !u!65 &2319723818927116046
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -737,7 +738,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 69b28f126fc0f9249877cad670382443, type: 2}
+  - {fileID: 2100000, guid: 02d77f7ea36e50e49b799871b925af12, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -820,7 +821,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 69b28f126fc0f9249877cad670382443, type: 2}
+  - {fileID: 2100000, guid: 02d77f7ea36e50e49b799871b925af12, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

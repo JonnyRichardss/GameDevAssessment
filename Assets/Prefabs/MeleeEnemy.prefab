@@ -516,12 +516,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0abb3ae6ddd2b6d4781de0bc187449c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  lastTrap: 0
   health: 10
   damage: 10
   targetObject: {fileID: 0}
   targetTransform: {fileID: 0}
   attackType: 0
-  PowerupPrefab: {fileID: 4227013873459334817, guid: 853cd30fcc102524aa07d054fb926c25, type: 3}
+  powerupPrefab: {fileID: 5396699758527978023}
+  bulletPrefab: {fileID: 0}
 --- !u!65 &2319723818927116046
 BoxCollider:
   m_ObjectHideFlags: 0

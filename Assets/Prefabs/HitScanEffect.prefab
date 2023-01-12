@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 3102965440939606283}
   - component: {fileID: 260270202354511634}
   - component: {fileID: -4612406160242684410}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: HitScanEffect
   m_TagString: Bullet
   m_Icon: {fileID: 0}
@@ -299,5 +299,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   impulse: 0
   lifetime: 0
-  ownPrefab: {fileID: 0}
-  isFollower: 0
+  charge: 0
