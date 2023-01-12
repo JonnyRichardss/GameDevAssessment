@@ -32,6 +32,9 @@ public class PlayerController : MonoBehaviour
     public GameObject hitscanPrefab;
     public Slider healthBar;
     public Slider chargeBar;
+    public Image healthIcon;
+    public Image chargeIcon;
+    public Image damageIcon;
 
     //Dynamic vars
     private float movementX, movementY;
@@ -145,17 +148,20 @@ public class PlayerController : MonoBehaviour
         {
             healthPowerTimer -= Time.deltaTime;
             health += Time.deltaTime * 4f;
+            healthIcon.fillAmount = healthPowerTimer/10f;
         }
-        if (chargePowerTimer > 0)
+        if (chargePowerTimer >= 0)
         {
             chargePowerTimer -= Time.deltaTime;
             weaponCharge += Time.deltaTime * 4f;
+            chargeIcon.fillAmount = chargePowerTimer / 10f;
         }
         if (damagePowerTimer >= 0)
         {
             damagePowerTimer -= Time.deltaTime;
             bulletDamage = baseBulletDamage * 2f;
             kickDamage = baseKickDamage * 5f;
+            damageIcon.fillAmount = damagePowerTimer / 10f;
         }
         else
         {

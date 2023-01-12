@@ -12,7 +12,10 @@ public class PlayerSpawnPoint : MonoBehaviour
     public Slider healthBar;
     public Slider chargeBar;
     public Camera UICamera;
-    
+    public Image healthIcon;
+    public Image chargeIcon;
+    public Image damageIcon;
+
     private GameObject player;
     private PlayerController newScript;
 
@@ -31,6 +34,9 @@ public class PlayerSpawnPoint : MonoBehaviour
         newScript.weaponCharge = charge;
         newScript.bulletPrefab = bulletPrefab;
         newScript.hitscanPrefab = hitscanPrefab;
+        newScript.healthIcon = healthIcon;
+        newScript.chargeIcon = chargeIcon;
+        newScript.damageIcon = damageIcon;
         var camData = player.GetComponentInChildren<Camera>().GetUniversalAdditionalCameraData();
         camData.cameraStack.Add(UICamera);
     }
