@@ -16,6 +16,7 @@ public class PlayerSpawnPoint : MonoBehaviour
     public Image chargeIcon;
     public Image damageIcon;
 
+    public GameObject allSpawns;
     private GameObject player;
     private PlayerController newScript;
 
@@ -39,5 +40,9 @@ public class PlayerSpawnPoint : MonoBehaviour
         newScript.damageIcon = damageIcon;
         var camData = player.GetComponentInChildren<Camera>().GetUniversalAdditionalCameraData();
         camData.cameraStack.Add(UICamera);
+        if (allSpawns != null)
+        {
+            allSpawns.SendMessage("OnNewPlayer", player);
+        }
     }
 }

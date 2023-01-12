@@ -34,7 +34,7 @@ public class EnemyScript : MonoBehaviour
         soundPlayer = GetComponent<AudioSource>();
         health = 10f;
         nav = GetComponent<NavMeshAgent>();
-        UpdateTarget(targetObject);
+        OnUpdateTarget(targetObject);
         anim = GetComponent<Animator>();
         
     }
@@ -126,7 +126,7 @@ public class EnemyScript : MonoBehaviour
         script.damage = 1f;
         script.bulletParent = gameObject;
     }
-    void UpdateTarget(GameObject newTarget)
+    public void OnUpdateTarget(GameObject newTarget)
     {
         targetObject = newTarget;
         targetTransform = newTarget.transform;

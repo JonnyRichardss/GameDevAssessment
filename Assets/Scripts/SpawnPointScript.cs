@@ -19,7 +19,7 @@ public class SpawnPointScript : MonoBehaviour
     void Update()
     {
 
-        if (enemies.Count <=5)
+        if (enemies.Count <=2)
         {
             newEnemy = Instantiate(enemyType,gameObject.transform.position,gameObject.transform.rotation);
             newScript = newEnemy.GetComponent<EnemyScript>();
@@ -32,6 +32,13 @@ public class SpawnPointScript : MonoBehaviour
             {
                 enemies.Remove(enemy);
             }
+        }
+    }
+    public void OnNewPlayer()
+    {
+        foreach (GameObject enemy in enemies)
+        {
+            enemy.SendMessage("OnUpdateTarget", player);
         }
     }
 }
