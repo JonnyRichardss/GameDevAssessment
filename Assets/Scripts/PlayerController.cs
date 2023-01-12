@@ -230,6 +230,17 @@ public class PlayerController : MonoBehaviour
             RespawnPlayer(10f);
         }
     }
+    private void OnTriggerStay(Collider other)
+    {
+        if (other.CompareTag("Trap"))
+        {
+            if (lastTrap != other.GetComponentInParent<SpikeTrapScript>().trapCounter && other.GetComponentInParent<SpikeTrapScript>().isDangerous)
+            {
+                lastTrap = other.GetComponentInParent<SpikeTrapScript>().trapCounter;
+                OnDamageTaken(5f);
+            }
+        }
+    }
     void OnDealtDamage(float damage)
     {
         weaponCharge += damage;

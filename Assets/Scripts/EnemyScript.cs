@@ -44,10 +44,6 @@ public class EnemyScript : MonoBehaviour
         nav.SetDestination(targetTransform.position);
         TryAttack();
     }
-    void FixedUpdate()
-    {
-
-    }
     void SpawnPowerup()
     {
          if( Random.value <= 0.1f)
@@ -117,6 +113,8 @@ public class EnemyScript : MonoBehaviour
         targetObject = newTarget;
         targetTransform = newTarget.transform;
     }
+
+    #region Messages
     void OnDamageTaken(float damage)
     {
         health -= damage;
@@ -127,7 +125,6 @@ public class EnemyScript : MonoBehaviour
             Destroy(gameObject);
         }
     }
-    #region Messages
     void OnScannedHit(float damage)
     {
         Debug.Log("SCNA");
@@ -142,6 +139,17 @@ public class EnemyScript : MonoBehaviour
     {
         Debug.Log("Ow");
         OnDamageTaken(damage);
+    }
+    private void OnTriggerStay(Collider other)
+    {
+        if (other.CompareTag("Trap"))
+        {
+            if (lastTrap != other.GetComponentInParent<SpikeTrapScript>().trapCounter && other.GetComponentInParent<SpikeTrapScript>().isDangerous)
+            {
+                lastTrap = other.GetComponentInParent<SpikeTrapScript>().trapCounter;
+                OnDamageTaken(5f);
+            }
+        }
     }
     #endregion
 }

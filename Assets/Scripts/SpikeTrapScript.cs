@@ -9,9 +9,9 @@ public class SpikeTrapScript : MonoBehaviour
     private Transform spikes;
     private Color safeColour = Color.green;
     private Color dangerColour = Color.red;
-    private bool isDangerous;
     private bool triggerable = true;
-    private int trapCounter = 0;
+    public bool isDangerous;
+    public int trapCounter = 0;
     // Start is called before the first frame update
     void Start()
     {
@@ -73,26 +73,5 @@ public class SpikeTrapScript : MonoBehaviour
         triggerTimer = Random.Range(2, 10);
     }
     
-    private void OnCollisionStay(Collision collision)
-    {
-        if (isDangerous)
-        {
-            if (collision.collider.CompareTag("Player"))
-            {
-                if (collision.collider.GetComponent<PlayerController>().lastTrap != trapCounter)
-                {
-                    collision.collider.GetComponent<PlayerController>().lastTrap = trapCounter;
-                    collision.collider.SendMessage("OnDamageTaken", 5f);
-                }  
-            }
-            if (collision.collider.CompareTag("Enemy"))
-            {
-                if (collision.collider.GetComponent<EnemyScript>().lastTrap != trapCounter)
-                {
-                    collision.collider.GetComponent<EnemyScript>().lastTrap = trapCounter;
-                    collision.collider.SendMessage("OnDamageTaken", 5f);
-                }
-            }
-        }
-    }
+   
 }
