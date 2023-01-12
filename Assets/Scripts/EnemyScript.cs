@@ -21,7 +21,8 @@ public class EnemyScript : MonoBehaviour
     public GameObject bulletPrefab;
 
 
-    private AudioSource soundPlayer;
+    public AudioSource soundPlayer;
+    public AudioSource bulletPlayer;
 
     private float attackCD = 0;
     private NavMeshAgent nav;
@@ -31,7 +32,6 @@ public class EnemyScript : MonoBehaviour
     {
         Physics.IgnoreLayerCollision(6, 9);
         Physics.IgnoreLayerCollision(6, 7);
-        soundPlayer = GetComponent<AudioSource>();
         health = 10f;
         nav = GetComponent<NavMeshAgent>();
         OnUpdateTarget(targetObject);
@@ -102,6 +102,7 @@ public class EnemyScript : MonoBehaviour
                 case EnemyType.Ranged:
                     if ((transform.position - targetTransform.position).magnitude < 8f)
                     {
+                        bulletPlayer.Play();
                         FireBullet();
                         attackCD = 1f;
                         return (true);

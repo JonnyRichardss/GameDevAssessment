@@ -18,6 +18,7 @@ public class BossScript : MonoBehaviour
     private float health;
     private float attackTimer;
     private NavMeshAgent nav;
+    public AudioSource bezerkNoise, bossFire, bossPunch,winSound;
 
     // Start is called before the first frame update
     void Start()
@@ -69,6 +70,7 @@ public class BossScript : MonoBehaviour
     {
         if (health/maxHealth <= .25)
         {
+            bezerkNoise.Play();
             bezerk = true;
             bezerkMult = 2;
             nav.speed *= 2;
@@ -79,9 +81,11 @@ public class BossScript : MonoBehaviour
         switch (Mathf.RoundToInt(Random.value))
         {
             case 0:
+                bossFire.Play();
                 FireBullets();
                 break;
             case 1:
+                bossPunch.Play();
                 StartCoroutine(Punch(Mathf.RoundToInt(Random.value)));
                 break;
         }
@@ -134,6 +138,7 @@ public class BossScript : MonoBehaviour
         VariableHolder.playerScore += damage;
         if (health <= 0)
         {
+            winSound.Play();
             bezerkMult = 0;
             winText.text = "You Win!!!";
             StartCoroutine(TitleAfterFive());

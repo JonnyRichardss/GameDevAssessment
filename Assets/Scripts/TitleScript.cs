@@ -6,6 +6,7 @@ using TMPro;
 public class TitleScript : MonoBehaviour
 {
     public TextMeshProUGUI text;
+    public AudioSource audioSource;
     // Start is called before the first frame update
     void Start()
     {
@@ -22,10 +23,12 @@ public class TitleScript : MonoBehaviour
     }
     public void BeginGame()
     {
+        audioSource.Play();
         SceneManager.LoadScene("MainLevel");
     }
     public void QuitGame()
     {
+        audioSource.Play();
         Debug.Log("QUITBUTTON");
         Application.Quit();
     }

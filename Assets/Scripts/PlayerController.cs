@@ -27,6 +27,12 @@ public class PlayerController : MonoBehaviour
     private Transform lookTarget;
     private Transform playerModel;
     private Transform gunEmitter;
+    public AudioSource playerHurt;
+    public AudioSource playerFire;
+    public AudioSource shotgunFire;
+    public AudioSource loseSound;
+    public AudioSource hitscanSound;
+    public AudioSource spinSpound;
 
     //Outside instanced
     public GameObject bulletPrefab;
@@ -109,6 +115,7 @@ public class PlayerController : MonoBehaviour
         {
             if (Time.time - lastFire >= fireDelay)
             {
+                playerFire.Play();
                 lastFire = Time.time;
                 GameObject newBullet = Instantiate(bulletPrefab, gunEmitter.position, playerModel.rotation);
                 BulletScript script = newBullet.GetComponent<BulletScript>();
@@ -122,8 +129,9 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            if (Time.time - lastFire >= 1f)
+            if (Time.time - lastFire >= .5f)
             {
+                shotgunFire.Play();
                 lastFire = Time.time;
                 for (float angle = -90f * (1f / 4f); angle <= 90f * (1f / 4f); angle += 90f / 8f)
                 {
@@ -191,6 +199,7 @@ public class PlayerController : MonoBehaviour
     {
         if (railCD <= 0)
         {
+            hitscanSound.Play();
             Ray hitscan = new Ray(playerModel.position, gunEmitter.position - playerModel.position);
             Debug.DrawRay(hitscan.origin, hitscan.direction * 100f, Color.red, 1f);
 
@@ -219,6 +228,7 @@ public class PlayerController : MonoBehaviour
     {
         if (kickCD <= 0)
         {
+            spinSpound.Play();
             anim.SetTrigger("Spin"); //ngl wish i knew about async when i hacked this one up
             Collider[] RangeHits = Physics.OverlapSphere(playerModel.position, meleeRadius);
             Debug.Log(RangeHits.Length);
@@ -228,7 +238,7 @@ public class PlayerController : MonoBehaviour
                 {
                     c.SendMessage("OnMeleeHit", kickDamage);
                     VariableHolder.playerScore += 10;
-                    c.attachedRigidbody.AddForce((c.transform.position - transform.position) * 5f, ForceMode.Impulse);
+                    c.attachedRigidbody.AddForce((c.transform.position - transform.position) * 7f, ForceMode.Impulse);
                 }
                 if (c.CompareTag("Shotgun"))
                 {
@@ -249,8 +259,10 @@ public class PlayerController : MonoBehaviour
     {
         if (VariableHolder.godMode) {return;}
         VariableHolder.playerHealth -= damage;
+        playerHurt.Play();
         if (VariableHolder.playerHealth <= 0.0f)
         {
+            loseSound.Play();
             SceneManager.LoadScene("TitleScreen");
         }
     }

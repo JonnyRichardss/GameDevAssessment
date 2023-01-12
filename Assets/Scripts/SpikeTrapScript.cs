@@ -12,9 +12,11 @@ public class SpikeTrapScript : MonoBehaviour
     private bool triggerable = true;
     public bool isDangerous;
     public int trapCounter = 0;
+    private AudioSource sound;
     // Start is called before the first frame update
     void Start()
     {
+        sound = GetComponent<AudioSource>();
         planeMesh = GetComponent<MeshRenderer>();
         spikes = gameObject.transform.GetChild(0);
         spikes.localPosition = new Vector3(0f,-1f,0f);
@@ -55,6 +57,7 @@ public class SpikeTrapScript : MonoBehaviour
         }
         //trigger spikes
         isDangerous = true;
+        sound.Play();
         for (int i = 0; i < 10; i++)
         {
             spikes.localPosition += Vector3.up * 0.2f;

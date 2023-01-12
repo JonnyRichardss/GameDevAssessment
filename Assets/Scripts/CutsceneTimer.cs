@@ -5,7 +5,12 @@ using UnityEngine.SceneManagement;
 public class CutsceneTimer : MonoBehaviour
 {
     float timer = 5;
+    public AudioSource source;
     // Update is called once per frame
+    private void Start()
+    {
+        source.Play();
+    }
     void Update()
     {
         timer -= Time.deltaTime;

@@ -522,8 +522,9 @@ MonoBehaviour:
   targetObject: {fileID: 0}
   targetTransform: {fileID: 0}
   attackType: 0
-  powerupPrefab: {fileID: 5396699758527978023}
+  powerupPrefab: {fileID: 4227013873459334817, guid: 853cd30fcc102524aa07d054fb926c25, type: 3}
   bulletPrefab: {fileID: 0}
+  soundPlayer: {fileID: 3672638118074016100}
 --- !u!65 &2319723818927116046
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -569,7 +570,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: b3a68d226e4bcde48a1dae7b23a6737b, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 11494793ef2f94c409a7479da79d85a0, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 0.629
   m_Pitch: 1
