@@ -48,6 +48,7 @@ public class PlayerController : MonoBehaviour
     public bool animating = false;
     public float health=100;
     public float weaponCharge = 1;
+    public int lastTrap;
     #endregion
     #region builtins
     void Start()

@@ -12,6 +12,7 @@ public class EnemyScript : MonoBehaviour
         Boss
     }
 
+    public int lastTrap;
     public float health;
     public float damage;
     public GameObject targetObject;

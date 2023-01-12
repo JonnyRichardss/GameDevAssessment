@@ -10,6 +10,8 @@ public class SpikeTrapScript : MonoBehaviour
     private Color safeColour = Color.green;
     private Color dangerColour = Color.red;
     private bool isDangerous;
+    private bool triggerable = true;
+    private int trapCounter = 0;
     // Start is called before the first frame update
     void Start()
     {
@@ -21,8 +23,10 @@ public class SpikeTrapScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (triggerTimer <= 0)
+        if (triggerable && triggerTimer <= 0)
         {
+            trapCounter++;
+            triggerable = false;
             StartCoroutine(TriggerSpikes());
         }
         else
@@ -61,20 +65,33 @@ public class SpikeTrapScript : MonoBehaviour
         for (int i = 0; i < 40; i++)
         {
             spikes.localPosition += Vector3.up * -0.05f;
-            yield return new WaitForSeconds(.1f);
+            yield return new WaitForSeconds(.05f);
         }
         planeMesh.material.color = safeColour;
         isDangerous = false;
+        triggerable = true;
         triggerTimer = Random.Range(2, 10);
     }
-
-    private void OnCollisionEnter(Collision collision)
+    
+    private void OnCollisionStay(Collision collision)
     {
         if (isDangerous)
         {
-            if (collision.collider.CompareTag("Player") || collision.collider.CompareTag("Enemy"))
+            if (collision.collider.CompareTag("Player"))
             {
-                collision.collider.SendMessage("OnDamageTaken", 5f);
+                if (collision.collider.GetComponent<PlayerController>().lastTrap != trapCounter)
+                {
+                    collision.collider.GetComponent<PlayerController>().lastTrap = trapCounter;
+                    collision.collider.SendMessage("OnDamageTaken", 5f);
+                }  
+            }
+            if (collision.collider.CompareTag("Enemy"))
+            {
+                if (collision.collider.GetComponent<EnemyScript>().lastTrap != trapCounter)
+                {
+                    collision.collider.GetComponent<EnemyScript>().lastTrap = trapCounter;
+                    collision.collider.SendMessage("OnDamageTaken", 5f);
+                }
             }
         }
     }
