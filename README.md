@@ -22,15 +22,18 @@ Annotated screenshot of main game UI
 The UI is designed so that it is easy to intuit what all the different icons stand for. For example, red is a very common colour used for health in games and therefore would make it obvious to most gamers what the bar is for.
 ## Hidden weapon
 There is a “hidden” shotgun weapon that the player can switch for their main weapon by going up to the large yellow square in the main level and activating the spin move (pressing “R”). 
+
 ![image003](https://github.com/JonnyRichardss/GameDevAssessment/assets/27598237/9cff4dbb-0b01-41d8-ad74-7f36f63f8d93)
 
 Screenshot of the trigger box.
 ### Spikes
 The floor spikes are green when safe (retracted) and red when dangerous (extended). They flash just before they extend to give the player a warning. 
+
 ![image005](https://github.com/JonnyRichardss/GameDevAssessment/assets/27598237/93b9c9f3-cdf0-4a22-8339-d4d023a74974)
 
 Screenshot of the two different spike states.
 ## Highlighted feature: secondary fire
+
 ![image007](https://github.com/JonnyRichardss/GameDevAssessment/assets/27598237/6cb07ba8-1c7d-4f06-a421-2d57aecc427c)
 
 Screenshot of the secondary fire, the most prominent mechanic in the game.
